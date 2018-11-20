@@ -16,7 +16,7 @@ public class Board implements GameBoard {
 	private List<Node> player_2;
 	private Set<Node> player_2_set;
 	private List<Pair<Integer, Integer>> edges;
-	private Set<Pair<Integer, Integer>> attackingEdges;
+	private List<Pair<Integer, Integer>> attackingEdges;
 	private boolean last_turn_attack_1;
 	private boolean last_turn_attack_2;
 	private List<Set<Node>> continents;
@@ -48,8 +48,14 @@ public class Board implements GameBoard {
 	}
 	@Override
 	public Set<Node> getPlayerNodesSet(Player player) {
-		// TODO Auto-generated method stub
-		return null;
+		if (player == null) {
+			throw new RuntimeException("Must assign a player");
+		}
+		if (player == Player.PLAYER_1) { 
+			return player_1_set;
+		} else {
+			return player_2_set;
+		}
 	}
 	@Override
 	public List<Node> getPlayerNodes(Player player) {
@@ -69,7 +75,20 @@ public class Board implements GameBoard {
 	}
 	@Override
 	public boolean node_belongs_to(Player player, int node) {
-		// TODO Auto-generated method stub
+		if (player == null) {
+			throw new RuntimeException("Must assign a player");
+		}
+		Set<Node> plNodes;
+		if (player == Player.PLAYER_1) { 
+			plNodes = player_1_set;
+		} else {
+			plNodes = player_2_set;
+		}
+		for (Node nodeT: plNodes) {
+			if (nodeT.getId() == node) {
+				return true;
+			}
+		}
 		return false;
 	}
 	@Override
@@ -98,20 +117,29 @@ public class Board implements GameBoard {
 
 	@Override
 	public Node getNodeById(Player player, int node) {
-		// TODO Auto-generated method stub
+		Set<Node> plNodes;
+		if (player == Player.PLAYER_1) { 
+			plNodes = player_1_set;
+		} else {
+			plNodes = player_2_set;
+		}
+		for (Node nodeT: plNodes) {
+			if (nodeT.getId() == node) {
+				return nodeT;
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public List<Pair<Integer, Integer>> getAttackingEdges() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.attackingEdges;
 	}
 
 	@Override
 	public List<Pair<Integer, Integer>> getEdges() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return this.edges;
 	}
 	
 	
