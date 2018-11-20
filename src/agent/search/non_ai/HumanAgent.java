@@ -1,11 +1,14 @@
 package agent.search.non_ai;
 
+import javax.swing.JFrame;
+
 import agent.Agent;
 import agent.search.SearchAgent;
 import game.model.GameBoard;
 import game.model.Node;
 import game.model.Player;
 import game.model.info_capsules.Attack;
+
 /**
  * 
  * @author Michael
@@ -27,13 +30,13 @@ public class HumanAgent implements Agent {
 	 */
 	private Attack attack;
 	
-	public HumanAgent(Player player) {
+	public HumanAgent(Player player, JFrame parent) {
 		this.player = player;
 	}
 	
 	@Override
 	public String getAgentName() {
-		return this.getClass().getName();
+		return "HumanAgent";
 	}
 
 	@Override
