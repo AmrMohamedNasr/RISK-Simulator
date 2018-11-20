@@ -1,5 +1,6 @@
 package game.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -46,8 +47,7 @@ public class Board implements GameBoard {
 
 	@Override
 	public GameBoard copyBoard() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Board(new ArrayList<>(player_1), new ArrayList<>(player_2), edges, continents, continents_bonus);
 	}
 
 	@Override
@@ -76,8 +76,25 @@ public class Board implements GameBoard {
 
 	@Override
 	public List<Attack> getPlayerPossibleAttacks(Player player) {
-		// TODO Amr-generated method stub
-		return null;
+		List<Attack> attacks = new ArrayList<>();
+		Set<Node> attacker_set = getPlayerNodesSet(player);
+		Set<Node> attacked_set;
+		if (player == Player.PLAYER_1) {
+			attacked_set = getPlayerNodesSet(Player.PLAYER_2);
+		} else {
+			attacked_set = getPlayerNodesSet(Player.PLAYER_1);
+		}
+		for (Node node : attacker_set) {
+			for (Node node2 : attacked_set) {
+				if (!areNeighbours(node, node2)) {
+					continue;
+				}
+				for (int i = node.getArmies() - 1; i - node2.getArmies() > 0; i--) {
+					attacks.add(new Attack(false, node.getId(), node2.getId(), i));
+				}
+			}
+		}
+		return attacks;
 	}
 
 	@Override
@@ -101,8 +118,27 @@ public class Board implements GameBoard {
 
 	@Override
 	public int get_turn_unit_number(Player player) {
-		// TODO Auto-generated method stub
-		return 0;
+		int sum = 0;
+		Set<Node> set = getPlayerNodesSet(player);
+		if (player == Player.PLAYER_1 && last_turn_attack_1) {
+			sum += 2;
+		} else if (player == Player.PLAYER_2 && last_turn_attack_2) {
+			sum += 2;
+		}
+		sum += Math.max(3, set.size() / 3);
+		for (int i = 0; i < continents.size(); i++) {
+			boolean all = true;
+			for (Node node : continents.get(i)) {
+				if (!set.contains(node)) {
+					all = false;
+					break;
+				}
+			}
+			if (all) {
+				sum += continents_bonus.get(i);
+			}
+		}
+		return sum;
 	}
 
 	@Override
@@ -111,7 +147,7 @@ public class Board implements GameBoard {
 		if (n == null) {
 			return;
 		}
-		n.setArmies(1);
+		n.setArmies(n.getArmies() + get_turn_unit_number(player));
 	}
 
 	@Override
@@ -128,18 +164,16 @@ public class Board implements GameBoard {
 				|| (node_belongs_to(Player.PLAYER_2, src) && node_belongs_to(Player.PLAYER_2, dest))) {
 			return;
 		}
-		Set<Node> attacker_set, attacked_set;
+		Set<Node> attacker_set = getPlayerNodesSet(player), attacked_set;
 		Node source = getNodeById(player, src);
 		if (source == null) {
 			return;
 		}
 		Node destination;
 		if (player == Player.PLAYER_1) {
-			attacker_set = player_1_set;
 			attacked_set = player_2_set;
 			destination = getNodeById(Player.PLAYER_2, dest);
 		} else {
-			attacker_set = player_2_set;
 			attacked_set = player_1_set;
 			destination = getNodeById(Player.PLAYER_1, dest);
 		}
@@ -181,6 +215,16 @@ public class Board implements GameBoard {
 	@Override
 	public List<Pair<Integer, Integer>> getEdges() {
 		return this.edges;
+	}
+
+	private boolean areNeighbours(Node node1, Node node2) {
+		for (Pair<Integer, Integer> pair : edges) {
+			if ((pair.first == node1.getId() && pair.second == node2.getId())
+					|| (pair.first == node2.getId() && pair.second == node1.getId())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

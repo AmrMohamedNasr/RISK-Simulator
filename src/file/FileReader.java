@@ -3,7 +3,7 @@ package file;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -33,7 +33,7 @@ public class FileReader implements BoardReader {
 			return null;
 		}
 
-		List<Node> nodes = new LinkedList<>();
+		List<Node> nodes = new ArrayList<>();
 		for (int i = 0; i < v; i++) {
 			nodes.add(new Node(i + 1, 0));
 		}
@@ -44,7 +44,7 @@ public class FileReader implements BoardReader {
 			return null;
 		}
 
-		List<Pair<Integer, Integer>> edges = new LinkedList<>();
+		List<Pair<Integer, Integer>> edges = new ArrayList<>();
 		for (int i = 0; i < e; i++) {
 			edges.add(new Pair<>());
 			String s = in.nextLine();
@@ -64,8 +64,8 @@ public class FileReader implements BoardReader {
 			in.close();
 			return null;
 		}
-		List<Set<Node>> continents = new LinkedList<>();
-		List<Integer> continentBonus = new LinkedList<>();
+		List<Set<Node>> continents = new ArrayList<>();
+		List<Integer> continentBonus = new ArrayList<>();
 		for (int i = 0; i < p; i++) {
 			String temp[] = in.nextLine().split(" ");
 			try {
@@ -88,7 +88,7 @@ public class FileReader implements BoardReader {
 
 		List<Node> player_1, player_2;
 
-		player_1 = new LinkedList<>();
+		player_1 = new ArrayList<>();
 		String temp[] = in.nextLine().split(" ");
 		for (int i = 0; i < temp.length; i++) {
 			int node, army;
@@ -107,7 +107,7 @@ public class FileReader implements BoardReader {
 			player_1.add(nodes.get(node - 1));
 		}
 
-		player_2 = new LinkedList<>();
+		player_2 = new ArrayList<>();
 		temp = in.nextLine().split(" ");
 		for (int i = 0; i < temp.length; i++) {
 			int node, army;
