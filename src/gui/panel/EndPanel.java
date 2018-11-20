@@ -1,13 +1,18 @@
 package gui.panel;
 
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import game.model.Player;
 import game.model.info_capsules.EndGameInformation;
+import gui.RiskFrame;
 
 public class EndPanel extends JPanel implements EndGamePanel {
 
@@ -21,25 +26,37 @@ public class EndPanel extends JPanel implements EndGamePanel {
 	private JLabel metric_1;
 	private JLabel metric_100;
 	private JLabel metric_10000;
+	private JButton returnButton;
 	
-	public EndPanel() {
+	public EndPanel(RiskFrame frame) {
 		players = new JLabel("");
 		winner = new JLabel("");
 		metric_1 = new JLabel("");
 		metric_100 = new JLabel("");
 		metric_10000 = new JLabel("");
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		this.add(Box.createVerticalGlue());
-		this.add(players);
-		this.add(Box.createVerticalGlue());
-		this.add(winner);
-		this.add(Box.createVerticalGlue());
-		this.add(metric_1);
-		this.add(Box.createVerticalGlue());
-		this.add(metric_100);
-		this.add(Box.createVerticalGlue());
-		this.add(metric_10000);
-		this.add(Box.createVerticalGlue());
+		returnButton = new JButton("Return To Menu");
+		returnButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				frame.next_state();
+			}
+		});
+		JPanel layout = new JPanel();
+		layout.setLayout(new BoxLayout(layout, BoxLayout.Y_AXIS));
+		layout.add(Box.createVerticalGlue());
+		layout.add(players);
+		layout.add(winner);
+		layout.add(Box.createVerticalStrut(20));
+		layout.add(metric_1);
+		layout.add(metric_100);
+		layout.add(metric_10000);
+		layout.add(Box.createVerticalStrut(40));
+		layout.add(returnButton);
+		layout.add(Box.createVerticalGlue());
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		this.add(Box.createHorizontalGlue());
+		this.add(layout);
+		this.add(Box.createHorizontalGlue());
 	}
 
 	@Override

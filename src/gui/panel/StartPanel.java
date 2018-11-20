@@ -36,7 +36,7 @@ public class StartPanel extends JPanel {
 	private BoardReader reader;
 	private Game game;
 
-	public StartPanel(RiskFrame parent) {
+	public StartPanel (RiskFrame parent) {
 		factory = new ConcreteAgentFactory();
 		game = new RiskGame();
 		reader = new FileReader();
@@ -87,5 +87,10 @@ public class StartPanel extends JPanel {
 				parent.getEndGamePanel().show_results(game.get_game_results());
 			}
 		});
+	}
+	
+	public void reset() {
+		agent_1.setSelectedIndex(0);
+		agent_2.setSelectedIndex(0);
 	}
 }
