@@ -52,6 +52,11 @@ public class Board implements GameBoard {
 		return null;
 	}
 	@Override
+	public List<Attack> getPlayerPossibleAttacks(Player player) {
+		// TODO Amr-generated method stub
+		return null;
+	}
+	@Override
 	public boolean node_belongs_to(Player player, int node) {
 		// TODO Auto-generated method stub
 		return false;
