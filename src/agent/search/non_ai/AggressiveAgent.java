@@ -70,6 +70,7 @@ public class AggressiveAgent implements Agent {
 			}
 			if (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() > maxDamage) {
 				maxDamage = opNode.getArmies();
+				// assume all possible armies will go to new node conquered.
 				tempAttack = new Attack(true, plNode.getId(), opNode.getId(), plNode.getArmies() - opNode.getArmies() - 1);
 			}
 		}
