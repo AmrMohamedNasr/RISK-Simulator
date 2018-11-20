@@ -1,7 +1,9 @@
 package file;
 
+import java.io.File;
+
 import game.model.Board;
 
 public interface BoardReader {
-	Board parseFile(String filePath);
+	Board parseFile(File file);
 }
