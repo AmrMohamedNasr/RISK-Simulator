@@ -37,7 +37,7 @@ public class AggressiveAgent implements Agent {
 	
 	@Override
 	public String getAgentName() {
-		return this.getClass().getName();
+		return "AggressiveAgent";
 	}
 
 	@Override

@@ -109,7 +109,10 @@ public class Board implements GameBoard {
 
 	@Override
 	public boolean isGameOver() {
-		// TODO Auto-generated method stub
+		if (player_1.isEmpty())
+			return true;
+		if (player_2.isEmpty())
+			return true;
 		return false;
 	}
 
@@ -138,7 +141,6 @@ public class Board implements GameBoard {
 
 	@Override
 	public List<Pair<Integer, Integer>> getEdges() {
-		
 		return this.edges;
 	}
 	
