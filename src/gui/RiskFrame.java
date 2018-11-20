@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 
+import gui.panel.EndGamePanel;
 import gui.panel.EndPanel;
 import gui.panel.GamePanel;
 import gui.panel.GameWindow;
@@ -47,5 +48,9 @@ public class RiskFrame extends JFrame {
 	
 	public GameWindow getGameWindow() {
 		return gamePanel;
+	}
+	
+	public EndGamePanel getEndGamePanel() {
+		return endPanel;
 	}
 }
