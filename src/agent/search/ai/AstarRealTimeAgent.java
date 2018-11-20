@@ -1,12 +1,26 @@
 package agent.search.ai;
 
+import agent.heuristic.GameHeuristic;
 import agent.search.SearchAgent;
 import game.model.GameBoard;
 import game.model.Player;
 import game.model.info_capsules.Attack;
 
-public class Astar implements SearchAgent {
+public class AstarRealTimeAgent implements SearchAgent{
 
+	/**
+	 * heuristic function used in search.
+	 */
+	private GameHeuristic heuristic;
+	
+	
+	
+	public AstarRealTimeAgent(GameHeuristic heuristic) {
+		if (heuristic == null) {
+			throw new RuntimeException("Must give heurstic function to A* search");
+		}
+		this.heuristic = heuristic;
+	}
 	@Override
 	public String getAgentName() {
 		// TODO Auto-generated method stub
