@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import agent.Agent;
-import agent.search.SearchAgent;
 import game.model.GameBoard;
 import game.model.Node;
 import game.model.Pair;
@@ -51,33 +50,46 @@ public class AggressiveAgent implements Agent {
 		int maxArmies = 0;
 		Node tempPlaceNode = null;
 		int maxDamage = 0;
-		Node tempDamageNode = null;
+		Attack tempAttack = new Attack(false, 0, 0, 0);
 		Set<Node> nodes = board.getPlayerNodesSet(player);
 		for (Node node: nodes) {
 			if (node.getArmies() > maxArmies) {
 				maxArmies = node.getArmies();
 				tempPlaceNode = node;
 			}
-			List<Integer> edges = node.getEdges();
-			for (int i = 0; i < edges.size(); i++) {
-				if (!board.node_belongs_to(player, edges.get(i))) {
-					
-				}
+		}
+		List<Pair<Integer, Integer>> attackingEdges = board.getAttackingEdges();
+		for (int i = 0; i < attackingEdges.size(); i++) {
+			Node plNode, opNode;
+			if (board.node_belongs_to(player, attackingEdges.get(i).first)) {
+				plNode = board.getNodeById(player, attackingEdges.get(i).first);
+				opNode = board.getNodeById(player.reverseTurn(player), attackingEdges.get(i).second);
+			} else {
+				plNode = board.getNodeById(player, attackingEdges.get(i).second);
+				opNode = board.getNodeById(player.reverseTurn(player), attackingEdges.get(i).first);
+			}
+			if (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() > maxDamage) {
+				maxDamage = opNode.getArmies();
+				// assume all possible armies will go to new node conquered.
+				tempAttack = new Attack(true, plNode.getId(), opNode.getId(), plNode.getArmies() - opNode.getArmies() - 1);
 			}
 		}
+		this.attack = tempAttack;
+		this.placeNode = tempPlaceNode;
 		
 	}
 
 	@Override
 	public int place_action() {
-		// TODO Auto-generated method stub
-		return 0;
+		if (placeNode == null) {
+			throw new RuntimeException("Must place armies in a node.");
+		}
+		return placeNode.getId();
 	}
 
 	@Override
 	public Attack attack_action() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.attack;
 	}
 
 	

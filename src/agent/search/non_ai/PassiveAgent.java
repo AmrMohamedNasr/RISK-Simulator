@@ -62,7 +62,9 @@ public class PassiveAgent implements Agent {
 
 	@Override
 	public int place_action() {
-		
+		if (placeNode == null) {
+			throw new RuntimeException("Must place armies in a node.");
+		}
 		return placeNode.getId();
 	}
 
