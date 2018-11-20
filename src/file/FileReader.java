@@ -14,16 +14,24 @@ import game.model.Pair;
 
 public class FileReader implements BoardReader {
 
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) {
 		FileReader reader = new FileReader();
-		reader.parseFile("try.txt");
+		reader.parseFile(new File("try.txt"));
 	}
 
 	@Override
-	public Board parseFile(String filePath) throws FileNotFoundException {
-		Scanner in = new Scanner(new File(filePath));
+	public Board parseFile(File file) {
+		Scanner in;
+		try {
+			in = new Scanner(file);
+		} catch (FileNotFoundException e1) {
+			return null;
+		}
 		int v = readInt(in.nextLine(), "V", "");
-		System.out.println(v);
+		if (v < 0) {
+			in.close();
+			return null;
+		}
 
 		List<Node> nodes = new LinkedList<>();
 		for (int i = 0; i < v; i++) {
@@ -31,33 +39,51 @@ public class FileReader implements BoardReader {
 		}
 
 		int e = readInt(in.nextLine(), "E", "");
-		System.out.println(e);
+		if (e < 0) {
+			in.close();
+			return null;
+		}
+
 		List<Pair<Integer, Integer>> edges = new LinkedList<>();
 		for (int i = 0; i < e; i++) {
 			edges.add(new Pair<>());
 			String s = in.nextLine();
-			edges.get(i).first = readInt(s, "(", " ");
-			System.out.print(edges.get(i).first + " ");
-			edges.get(i).second = readInt(s, " ", ")");
-			System.out.println(edges.get(i).second);
+			int first = readInt(s, "(", " ");
+			int second = readInt(s, " ", ")");
+			if (first < 0 || first > v || second < 0 || second > v) {
+				in.close();
+				return null;
+			}
+			edges.get(i).first = first;
+			edges.get(i).second = second;
 
 		}
 
 		int p = readInt(in.nextLine(), "P", "");
-		System.out.println(p);
+		if (p < 0) {
+			in.close();
+			return null;
+		}
 		List<Set<Node>> continents = new LinkedList<>();
 		List<Integer> continentBonus = new LinkedList<>();
 		for (int i = 0; i < p; i++) {
 			String temp[] = in.nextLine().split(" ");
-			continentBonus.add(Integer.parseInt(temp[0].trim()));
-			System.out.println(continentBonus.get(i));
-			Set<Node> s = new HashSet<>();
-			for (int j = 1; j < temp.length; j++) {
-				s.add(nodes.get(Integer.parseInt(temp[j].trim()) - 1));
-				System.out.print(nodes.get(Integer.parseInt(temp[j].trim()) - 1).getId() + " ");
+			try {
+				continentBonus.add(Integer.parseInt(temp[0].trim()));
+				Set<Node> s = new HashSet<>();
+				for (int j = 1; j < temp.length; j++) {
+					int node = Integer.parseInt(temp[j].trim());
+					if (node < 1 || node > v) {
+						in.close();
+						return null;
+					}
+					s.add(nodes.get(node - 1));
+				}
+				continents.add(s);
+			} catch (NumberFormatException ex) {
+				in.close();
+				return null;
 			}
-			continents.add(s);
-			System.out.println();
 		}
 
 		List<Node> player_1, player_2;
@@ -65,30 +91,53 @@ public class FileReader implements BoardReader {
 		player_1 = new LinkedList<>();
 		String temp[] = in.nextLine().split(" ");
 		for (int i = 0; i < temp.length; i++) {
-			player_1.add(nodes.get(Integer.parseInt(temp[i].trim()) - 1));
-			System.out.print(nodes.get(Integer.parseInt(temp[i].trim()) - 1).getId() + " ");
+			int node;
+			try {
+				node = Integer.parseInt(temp[i].trim());
+			} catch (NumberFormatException ex) {
+				in.close();
+				return null;
+			}
+			if (node < 1 || node > v) {
+				in.close();
+				return null;
+			}
+			player_1.add(nodes.get(node - 1));
 		}
-
-		System.out.println();
 
 		player_2 = new LinkedList<>();
 		temp = in.nextLine().split(" ");
 		for (int i = 0; i < temp.length; i++) {
-			player_2.add(nodes.get(Integer.parseInt(temp[i].trim()) - 1));
-			System.out.print(nodes.get(Integer.parseInt(temp[i].trim()) - 1).getId() + " ");
+			int node;
+			try {
+				node = Integer.parseInt(temp[i].trim());
+				if (node < 1 || node > v) {
+					in.close();
+					return null;
+				}
+			} catch (NumberFormatException ex) {
+				in.close();
+				return null;
+			}
+			player_2.add(nodes.get(node - 1));
 		}
 
 		in.close();
+
 		return new Board(player_1, player_2, edges, continents, continentBonus);
 	}
 
 	private int readInt(String s, String prefix, String suffix) {
-		if (s.indexOf(prefix) != -1 && !suffix.equals("") && s.indexOf(suffix) != -1) {
-			return Integer.parseInt(s.substring(s.indexOf(prefix) + prefix.length(), s.indexOf(suffix)).trim());
+		try {
+			if (s.indexOf(prefix) != -1 && !suffix.equals("") && s.indexOf(suffix) != -1) {
+				return Integer.parseInt(s.substring(s.indexOf(prefix) + prefix.length(), s.indexOf(suffix)).trim());
+			}
+			if (s.indexOf(prefix) != -1) {
+				return Integer.parseInt(s.substring(s.indexOf(prefix) + prefix.length()).trim());
+			}
+		} catch (NumberFormatException ex) {
+			return -1;
 		}
-		if (s.indexOf(prefix) != -1) {
-			return Integer.parseInt(s.substring(s.indexOf(prefix) + prefix.length()).trim());
-		}
-		return 0;
+		return -1;
 	}
 }
