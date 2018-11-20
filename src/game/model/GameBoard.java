@@ -29,4 +29,6 @@ public interface GameBoard {
 	public void place_unit(Player player, int node);
 	
 	public void attack_node(Player player, Attack attack);
+	
+	public boolean isGameOver();
 }

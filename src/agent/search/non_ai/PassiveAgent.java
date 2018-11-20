@@ -34,7 +34,7 @@ public class PassiveAgent implements Agent {
 	}
 	@Override
 	public String getAgentName() {
-		return "PassiveAgent";
+		return this.getClass().getName();
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package agent.search.non_ai;
 import agent.Agent;
 import agent.search.SearchAgent;
 import game.model.GameBoard;
+import game.model.Node;
 import game.model.Player;
 import game.model.info_capsules.Attack;
 /**
@@ -14,10 +15,27 @@ import game.model.info_capsules.Attack;
  */
 public class AggressiveAgent implements Agent {
 
+	/**
+	 * player uses this agent.
+	 */
+	private Player player;
+	/**
+	 * node to place armies in.
+	 */
+	private Node placeNode;
+	/**
+	 * Attack action. 
+	 */
+	private Attack attack;
+	
+	public AggressiveAgent(Player player) {
+		// TODO Auto-generated constructor stub
+		this.player = player;
+	}
+	
 	@Override
 	public String getAgentName() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.getClass().getName();
 	}
 
 	@Override
