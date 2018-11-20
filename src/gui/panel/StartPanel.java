@@ -1,6 +1,5 @@
 package gui.panel;
 
-
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,15 +25,15 @@ public class StartPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private JComboBox<String> agent_1;
 	private JComboBox<String> agent_2;
 	private JButton startGame;
 	private AgentFactory factory;
 	private BoardReader reader;
 	private Game game;
-	
-	public StartPanel (RiskFrame parent) {
+
+	public StartPanel(RiskFrame parent) {
 		factory = new ConcreteAgentFactory();
 		game = new RiskGame();
 		reader = new FileReader();
