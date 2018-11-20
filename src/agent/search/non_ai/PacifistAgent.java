@@ -30,9 +30,13 @@ public class PacifistAgent implements Agent {
 	 */
 	private Attack attack;
 	
+	public PacifistAgent(Player player) {
+		this.player = player;
+	}
+	
 	@Override
 	public String getAgentName() {
-		return this.getClass().getName();
+		return "PacifistAgent";
 	}
 
 	@Override

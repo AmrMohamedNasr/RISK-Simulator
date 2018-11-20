@@ -15,7 +15,7 @@ public class GreedyAgent implements SearchAgent {
 	
 	
 	
-	public GreedyAgent(GameHeuristic heuristic) {
+	public GreedyAgent(Player player, GameHeuristic heuristic) {
 		if (heuristic == null) {
 			throw new RuntimeException("Must give heurstic function to A* search");
 		}

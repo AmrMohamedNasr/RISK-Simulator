@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 
+import gui.panel.EndGamePanel;
 import gui.panel.EndPanel;
 import gui.panel.GamePanel;
 import gui.panel.GameWindow;
@@ -24,7 +25,7 @@ public class RiskFrame extends JFrame {
 		current_state = 0;
 		startPanel = new StartPanel(this);
 		gamePanel = new GamePanel();
-		endPanel = new EndPanel();
+		endPanel = new EndPanel(this);
 		this.setPreferredSize(new Dimension(1000, 1000));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -35,17 +36,24 @@ public class RiskFrame extends JFrame {
 	}
 	
 	public void next_state() {
+		this.getContentPane().removeAll();
 		current_state = (current_state + 1) % 3;
 		if (current_state == 0) {
+			startPanel.reset();
 			this.add(startPanel, BorderLayout.CENTER);
 		} else if (current_state == 1) {
 			this.add(gamePanel, BorderLayout.CENTER);
 		} else if (current_state == 2) {
 			this.add(endPanel, BorderLayout.CENTER);
 		}
+		this.revalidate();
 	}
 	
 	public GameWindow getGameWindow() {
 		return gamePanel;
+	}
+	
+	public EndGamePanel getEndGamePanel() {
+		return endPanel;
 	}
 }

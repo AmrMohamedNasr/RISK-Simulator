@@ -16,7 +16,7 @@ public class AstarAgent implements SearchAgent {
 	
 	
 	
-	public AstarAgent(GameHeuristic heuristic) {
+	public AstarAgent(Player player, GameHeuristic heuristic) {
 		if (heuristic == null) {
 			throw new RuntimeException("Must give heurstic function to A* search");
 		}

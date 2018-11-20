@@ -3,11 +3,14 @@ package gui.panel;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import agent.Agent;
 import agent.factory.AgentFactory;
@@ -33,7 +36,7 @@ public class StartPanel extends JPanel {
 	private BoardReader reader;
 	private Game game;
 
-	public StartPanel(RiskFrame parent) {
+	public StartPanel (RiskFrame parent) {
 		factory = new ConcreteAgentFactory();
 		game = new RiskGame();
 		reader = new FileReader();
@@ -54,14 +57,40 @@ public class StartPanel extends JPanel {
 		startGame.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String path;
-				// TODO Auto-generated method stub
-				GameBoard board = reader.parseFile(path);
+				File file;
+				JFileChooser chooser = new JFileChooser();
+				FileNameExtensionFilter txtfilter
+				= new FileNameExtensionFilter(
+						"txt files (*.txt)", "txt");
+				chooser.addChoosableFileFilter(txtfilter);
+				chooser.setAcceptAllFileFilterUsed(false);
+				chooser.setFileFilter(txtfilter);
+				int choice = chooser.showOpenDialog(null);
+				if (choice != JFileChooser.APPROVE_OPTION) {
+					return;
+				}
+				file = chooser.getSelectedFile();
+				GameBoard board = null;
+				try {
+					board = reader.parseFile(file);
+					if (board == null) {
+						return;
+					}
+				} catch (Exception exc) {
+					return;
+				}
 				Agent player_1 = factory.generateAgent(agent_1.getSelectedIndex(), board, parent);
 				Agent player_2 = factory.generateAgent(agent_2.getSelectedIndex(), board, parent);
 				parent.next_state();
 				game.play_game(board, player_1, player_2, parent.getGameWindow());
+				parent.next_state();
+				parent.getEndGamePanel().show_results(game.get_game_results());
 			}
 		});
+	}
+	
+	public void reset() {
+		agent_1.setSelectedIndex(0);
+		agent_2.setSelectedIndex(0);
 	}
 }
