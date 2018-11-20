@@ -1,7 +1,10 @@
 package agent.search.non_ai;
 
+import java.util.List;
+
 import agent.search.SearchAgent;
 import game.model.GameBoard;
+import game.model.Node;
 import game.model.Player;
 import game.model.info_capsules.Attack;
 /**
@@ -11,41 +14,71 @@ import game.model.info_capsules.Attack;
  * on the vertex that has the fewest armies, breaking ties by favoring the lowest-numbered vertex.
  */
 public class PassiveAgent implements SearchAgent {
-
+	/**
+	 * player uses this agent.
+	 */
+	private Player player;
+	/**
+	 * node to place armies in.
+	 */
+	private Node placeNode;
+	/**
+	 * Attack action. 
+	 */
+	private Attack attack;
+	
+	public PassiveAgent(Player player) {
+		
+		this.player = player;
+		this.attack = new Attack(false, 0, 0, 0);
+	}
 	@Override
 	public String getAgentName() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return "PassiveAgent";
 	}
 
 	@Override
 	public Player getAgentPlayer() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return player;
 	}
 
 	@Override
 	public void observe_enviroment(GameBoard board) {
-		// TODO Auto-generated method stub
 		
+		int min = Integer.MAX_VALUE;
+		Node temp = null;
+		List<Node> nodes = board.getPlayerNodes(player);
+		for (int i = 0; i < nodes.size(); i++) {
+			Node node = nodes.get(i);
+			if (min > node.getArmies() ||
+					(min == node.getArmies() 
+					&& (temp != null && temp.getId() > node.getId() || temp == null))) {
+				temp = node;
+				min = node.getArmies();
+			}
+		}
+		placeNode = temp;
 	}
 
 	@Override
 	public int place_action() {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return placeNode.getId();
 	}
 
 	@Override
 	public Attack attack_action() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return attack;
 	}
 
 	@Override
 	public int getExpandedNodesTotalNumber() {
-		// TODO Auto-generated method stub
-		return 0;
+		// only one node expanded with the node has fewest armies,
+		//breaking ties by favoring the lowest-numbered vertex. 
+		return 1;
 	}
 
 }
