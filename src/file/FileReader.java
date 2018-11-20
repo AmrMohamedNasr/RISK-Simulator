@@ -16,14 +16,14 @@ public class FileReader implements BoardReader {
 
 	public static void main(String[] args) {
 		FileReader reader = new FileReader();
-		reader.parseFile("try.txt");
+		reader.parseFile(new File("try.txt"));
 	}
 
 	@Override
-	public Board parseFile(String filePath) {
+	public Board parseFile(File file) {
 		Scanner in;
 		try {
-			in = new Scanner(new File(filePath));
+			in = new Scanner(file);
 		} catch (FileNotFoundException e1) {
 			return null;
 		}
