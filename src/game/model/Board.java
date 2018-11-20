@@ -1,6 +1,7 @@
 package game.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,10 +25,10 @@ public class Board implements GameBoard {
 	private List<Set<Node>> continents;
 	private List<Integer> continents_bonus;
 
-	public Board(List<Node> player_1, List<Node> player_2, List<Pair<Integer, Integer>> edges,
+	public Board(Set<Node> player_1, Set<Node> player_2, List<Pair<Integer, Integer>> edges,
 			List<Set<Node>> continents, List<Integer> continentBonus) {
-		this.player_1 = player_1;
-		this.player_2 = player_2;
+		this.player_1_set = player_1;
+		this.player_2_set = player_2;
 		this.edges = edges;
 		this.continents = continents;
 		this.continents_bonus = continentBonus;
@@ -47,7 +48,35 @@ public class Board implements GameBoard {
 
 	@Override
 	public GameBoard copyBoard() {
-		return new Board(new ArrayList<>(player_1), new ArrayList<>(player_2), edges, continents, continents_bonus);
+		Set<Node> tempPly1Set = copySet(this.player_1_set);
+		Set<Node> tempPly2Set = copySet(this.player_2_set);
+		List<Set<Node>> tempContinents = new ArrayList<>();	
+		for (int i = 0; i < this.continents.size(); i++) {
+			Set<Node> tempContinent = copySet(this.continents.get(i));
+			tempContinents.add(tempContinent);
+		}
+		List<Integer> tempContinentBonus = new ArrayList<>();
+		for (int i = 0; i < this.continents_bonus.size(); i++) {
+			tempContinentBonus.add(this.continents_bonus.get(i));
+		}
+		List<Pair<Integer, Integer>> tempEdges = new ArrayList<>();
+		for (int i = 0; i < edges.size(); i++) {
+			//TODO l laptop hyfsel 5alas w mkasel aroo7 ash7eno :"D
+		}
+		
+		return null;
+	}
+	
+	private Set<Node> copySet(Set<Node> nodes) {
+		Set<Node> tempNodes = new HashSet<>();
+		for(Node node: nodes) {
+			Node temp = new Node(node.getId(), node.getArmies());
+			for (int i = 0; i < node.getEdges().size(); i++) {
+				temp.addEdge(node.getEdges().get(i));
+			}
+			tempNodes.add(temp);
+		}
+		return tempNodes;
 	}
 
 	@Override
