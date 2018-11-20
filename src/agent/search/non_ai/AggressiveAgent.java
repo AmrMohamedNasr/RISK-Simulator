@@ -1,5 +1,6 @@
 package agent.search.non_ai;
 
+import agent.Agent;
 import agent.search.SearchAgent;
 import game.model.GameBoard;
 import game.model.Player;
@@ -11,7 +12,7 @@ import game.model.info_capsules.Attack;
  * armies, and greedily attempts to attack so as to cause the most damage
  * i.e: to prevent its opponent getting a continent bonus (the largest possible).
  */
-public class AggressiveAgent implements SearchAgent {
+public class AggressiveAgent implements Agent {
 
 	@Override
 	public String getAgentName() {
@@ -43,10 +44,6 @@ public class AggressiveAgent implements SearchAgent {
 		return null;
 	}
 
-	@Override
-	public int getExpandedNodesTotalNumber() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
 
 }

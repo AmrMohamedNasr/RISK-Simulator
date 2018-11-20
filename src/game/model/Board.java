@@ -23,7 +23,11 @@ public class Board implements GameBoard {
 	
 	public Board(List<Node> player_1, List<Node> player_2, List<Pair<Integer, Integer>> edges,
 			List<Set<Node>> continents, List<Integer> continentBonus) {
-		
+		this.player_1 = player_1;
+		this.player_2 = player_2;
+		this.edges = edges;
+		this.continents = continents;
+		this.continents_bonus = continentBonus;
 	}
 	
 	@Override
@@ -48,8 +52,14 @@ public class Board implements GameBoard {
 	}
 	@Override
 	public List<Node> getPlayerNodes(Player player) {
-		// TODO Auto-generated method stub
-		return null;
+		if (player == null) {
+			throw new RuntimeException("Must assign a player");
+		}
+		if (player == Player.PLAYER_1) { 
+			return player_1;
+		} else {
+			return player_2;
+		}
 	}
 	@Override
 	public List<Attack> getPlayerPossibleAttacks(Player player) {

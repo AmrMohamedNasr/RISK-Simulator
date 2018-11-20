@@ -1,5 +1,6 @@
 package agent.search.non_ai;
 
+import agent.Agent;
 import agent.search.SearchAgent;
 import game.model.GameBoard;
 import game.model.Player;
@@ -9,7 +10,7 @@ import game.model.info_capsules.Attack;
  * @author Michael
  * Agent that reads the next move from the user.
  */
-public class HumanAgent implements SearchAgent {
+public class HumanAgent implements Agent {
 
 	@Override
 	public String getAgentName() {
@@ -41,10 +42,6 @@ public class HumanAgent implements SearchAgent {
 		return null;
 	}
 
-	@Override
-	public int getExpandedNodesTotalNumber() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
 
 }

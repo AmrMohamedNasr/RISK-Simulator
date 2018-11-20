@@ -2,6 +2,7 @@ package agent.search.non_ai;
 
 import java.util.List;
 
+import agent.Agent;
 import agent.search.SearchAgent;
 import game.model.GameBoard;
 import game.model.Node;
@@ -13,7 +14,7 @@ import game.model.info_capsules.Attack;
  * Agent that never attacks, and always places all its additional armies
  * on the vertex that has the fewest armies, breaking ties by favoring the lowest-numbered vertex.
  */
-public class PassiveAgent implements SearchAgent {
+public class PassiveAgent implements Agent {
 	/**
 	 * player uses this agent.
 	 */
@@ -28,25 +29,21 @@ public class PassiveAgent implements SearchAgent {
 	private Attack attack;
 	
 	public PassiveAgent(Player player) {
-		
 		this.player = player;
 		this.attack = new Attack(false, 0, 0, 0);
 	}
 	@Override
 	public String getAgentName() {
-		
 		return "PassiveAgent";
 	}
 
 	@Override
 	public Player getAgentPlayer() {
-		
 		return player;
 	}
 
 	@Override
 	public void observe_enviroment(GameBoard board) {
-		
 		int min = Integer.MAX_VALUE;
 		Node temp = null;
 		List<Node> nodes = board.getPlayerNodes(player);
@@ -74,11 +71,6 @@ public class PassiveAgent implements SearchAgent {
 		return attack;
 	}
 
-	@Override
-	public int getExpandedNodesTotalNumber() {
-		// only one node expanded with the node has fewest armies,
-		//breaking ties by favoring the lowest-numbered vertex. 
-		return 1;
-	}
+	
 
 }
