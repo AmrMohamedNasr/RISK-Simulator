@@ -1,5 +1,8 @@
 package agent.search.non_ai;
 
+import java.util.List;
+import java.util.Set;
+
 import agent.Agent;
 import agent.search.SearchAgent;
 import game.model.GameBoard;
@@ -29,7 +32,6 @@ public class AggressiveAgent implements Agent {
 	private Attack attack;
 	
 	public AggressiveAgent(Player player) {
-		// TODO Auto-generated constructor stub
 		this.player = player;
 	}
 	
@@ -40,13 +42,28 @@ public class AggressiveAgent implements Agent {
 
 	@Override
 	public Player getAgentPlayer() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.player;
 	}
 
 	@Override
 	public void observe_enviroment(GameBoard board) {
-		// TODO Auto-generated method stub
+		int maxArmies = 0;
+		Node tempPlaceNode = null;
+		int maxDamage = 0;
+		Node tempDamageNode = null;
+		Set<Node> nodes = board.getPlayerNodesSet(player);
+		for (Node node: nodes) {
+			if (node.getArmies() > maxArmies) {
+				maxArmies = node.getArmies();
+				tempPlaceNode = node;
+			}
+			List<Integer> edges = node.getEdges();
+			for (int i = 0; i < edges.size(); i++) {
+				if (!board.node_belongs_to(player, edges.get(i))) {
+					
+				}
+			}
+		}
 		
 	}
 

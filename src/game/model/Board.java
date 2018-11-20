@@ -16,6 +16,7 @@ public class Board implements GameBoard {
 	private List<Node> player_2;
 	private Set<Node> player_2_set;
 	private List<Pair<Integer, Integer>> edges;
+	private List<Pair<Integer, Integer>> attackingEdges;
 	private boolean last_turn_attack_1;
 	private boolean last_turn_attack_2;
 	private List<Set<Node>> continents;
@@ -92,6 +93,8 @@ public class Board implements GameBoard {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	
 	
 	
 	

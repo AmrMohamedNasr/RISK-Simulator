@@ -1,6 +1,8 @@
 package agent.search.non_ai;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import agent.Agent;
 import agent.search.SearchAgent;
@@ -46,9 +48,8 @@ public class PassiveAgent implements Agent {
 	public void observe_enviroment(GameBoard board) {
 		int min = Integer.MAX_VALUE;
 		Node temp = null;
-		List<Node> nodes = board.getPlayerNodes(player);
-		for (int i = 0; i < nodes.size(); i++) {
-			Node node = nodes.get(i);
+		Set<Node> nodes = board.getPlayerNodesSet(player);
+		for (Node node: nodes) {
 			if (min > node.getArmies() ||
 					(min == node.getArmies() 
 					&& (temp != null && temp.getId() > node.getId() || temp == null))) {
