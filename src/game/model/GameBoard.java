@@ -20,6 +20,8 @@ public interface GameBoard {
 	
 	public List<Node> getPlayerNodes(Player player);
 	
+	public List<Attack> getPlayerPossibleAttacks(Player player);
+	
 	public boolean node_belongs_to(Player player, int node);
 	
 	public int get_turn_unit_number(Player player);
