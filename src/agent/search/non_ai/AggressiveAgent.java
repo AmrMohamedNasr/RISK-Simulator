@@ -7,6 +7,7 @@ import agent.Agent;
 import agent.search.SearchAgent;
 import game.model.GameBoard;
 import game.model.Node;
+import game.model.Pair;
 import game.model.Player;
 import game.model.info_capsules.Attack;
 /**

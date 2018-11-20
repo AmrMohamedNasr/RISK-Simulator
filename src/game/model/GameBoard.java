@@ -31,4 +31,10 @@ public interface GameBoard {
 	public void attack_node(Player player, Attack attack);
 	
 	public boolean isGameOver();
+	
+	public Node getNodeById(Player player, int node);
+	
+	public List<Pair<Integer, Integer>> getAttackingEdges();
+	
+	public List<Pair<Integer, Integer>> getEdges();
 }

@@ -16,7 +16,7 @@ public class Board implements GameBoard {
 	private List<Node> player_2;
 	private Set<Node> player_2_set;
 	private List<Pair<Integer, Integer>> edges;
-	private List<Pair<Integer, Integer>> attackingEdges;
+	private Set<Pair<Integer, Integer>> attackingEdges;
 	private boolean last_turn_attack_1;
 	private boolean last_turn_attack_2;
 	private List<Set<Node>> continents;
@@ -92,6 +92,26 @@ public class Board implements GameBoard {
 	public boolean isGameOver() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	
+
+	@Override
+	public Node getNodeById(Player player, int node) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Pair<Integer, Integer>> getAttackingEdges() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Pair<Integer, Integer>> getEdges() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	
