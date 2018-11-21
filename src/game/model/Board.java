@@ -241,6 +241,19 @@ public class Board implements GameBoard {
 		destination.setArmies(units_to_move);
 		attacker_set.put(destination.getId(), destination);
 		attacked_set.remove(destination.getId());
+		for (int i = this.attackingEdges.size() - 1; i >= 0; i--) {
+			if (this.attackingEdges.get(i).first == destination.getId()
+					|| this.attackingEdges.get(i).second == destination.getId()) {
+				this.attackingEdges.remove(i);
+			}
+		}
+		for (int i = 0; i < destination.getEdges().size(); i++) {
+			if (player_1_set.containsKey(destination.getId()) 
+					!= player_1_set.containsKey(destination.getEdges().get(i))) {
+				this.attackingEdges.add(new Pair<Integer, Integer>(destination.getId(),
+						destination.getEdges().get(i)));
+			}
+		}
 	}
 
 	@Override

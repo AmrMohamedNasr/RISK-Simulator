@@ -131,6 +131,7 @@ public class GamePanel extends JPanel implements GameWindow {
 					String.valueOf(edges.get(i).second), false);
 		
 		}
+		this.repaint();
 	}
 
 }

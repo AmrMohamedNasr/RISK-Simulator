@@ -55,4 +55,9 @@ public class Node {
 	public void setArmies(int armies) {
 		this.armies = armies;
 	}
+	
+	@Override
+	public String toString() {
+		return "(" + String.valueOf(this.id) + " <- " + String.valueOf(this.armies) + ")"; 
+	}
 }

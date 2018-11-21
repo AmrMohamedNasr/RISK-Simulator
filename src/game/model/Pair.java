@@ -9,4 +9,10 @@ public class Pair<T1, T2> {
 		first = t1;
 		second = t2;
 	}
+	
+	@Override
+	public String toString() {
+		return "(" + String.valueOf(first) + ", " + String.valueOf(second) + ")";
+		
+	}
 }

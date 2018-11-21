@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import agent.Agent;
@@ -24,6 +25,7 @@ import game.RiskGame;
 import game.model.GameBoard;
 import game.model.Player;
 import gui.RiskFrame;
+import gui.worker.GameWorker;
 
 public class StartPanel extends JPanel {
 
@@ -77,20 +79,17 @@ public class StartPanel extends JPanel {
 				try {
 					board = reader.parseFile(file);
 					if (board == null) {
-						System.out.println("Null board");
 						return;
 					}
 				} catch (Exception exc) {
-					exc.printStackTrace();
 					return;
 				}
 				GameHeuristic heuristic = new RiskGameHeuristic();
 				Agent player_1 = factory.generateAgent(agent_1.getSelectedIndex(), parent, Player.PLAYER_1, heuristic);
 				Agent player_2 = factory.generateAgent(agent_2.getSelectedIndex(), parent, Player.PLAYER_2, heuristic);
 				parent.next_state();
-				game.play_game(board, player_1, player_2, parent.getGameWindow());
-				parent.next_state();
-				parent.getEndGamePanel().show_results(game.get_game_results());
+				GameWorker worker = new GameWorker(game, board, player_1, player_2, parent);
+				SwingUtilities.invokeLater(worker);
 			}
 		});
 	}

@@ -58,10 +58,10 @@ public class RiskGame implements Game {
 		}
 		Agent winner;
 		int exp_nodes;
-		if (board.getPlayerNodesSet(Player.PLAYER_1).size() == 0) {
-			winner = player_1;
-		} else {
+		if (board.getPlayerNodesMap(Player.PLAYER_1).size() == 0) {
 			winner = player_2;
+		} else {
+			winner = player_1;
 		}
 		if (winner instanceof SearchAgent) {
 			exp_nodes = ((SearchAgent) winner).getExpandedNodesTotalNumber();

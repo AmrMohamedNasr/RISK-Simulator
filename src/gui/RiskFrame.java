@@ -27,6 +27,7 @@ public class RiskFrame extends JFrame {
 		gamePanel = new GamePanel();
 		endPanel = new EndPanel(this);
 		this.setPreferredSize(new Dimension(1000, 1000));
+		this.setSize(1000, 1000);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.setLayout(new BorderLayout());
@@ -47,6 +48,7 @@ public class RiskFrame extends JFrame {
 			this.add(endPanel, BorderLayout.CENTER);
 		}
 		this.revalidate();
+		this.repaint();
 	}
 	
 	public GameWindow getGameWindow() {
