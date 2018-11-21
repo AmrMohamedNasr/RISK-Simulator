@@ -15,11 +15,14 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import agent.Agent;
 import agent.factory.AgentFactory;
 import agent.factory.ConcreteAgentFactory;
+import agent.heuristic.GameHeuristic;
+import agent.heuristic.RiskGameHeuristic;
 import file.BoardReader;
 import file.FileReader;
 import game.Game;
 import game.RiskGame;
 import game.model.GameBoard;
+import game.model.Player;
 import gui.RiskFrame;
 
 public class StartPanel extends JPanel {
@@ -79,8 +82,9 @@ public class StartPanel extends JPanel {
 				} catch (Exception exc) {
 					return;
 				}
-				Agent player_1 = factory.generateAgent(agent_1.getSelectedIndex(), board, parent);
-				Agent player_2 = factory.generateAgent(agent_2.getSelectedIndex(), board, parent);
+				GameHeuristic heuristic = new RiskGameHeuristic();
+				Agent player_1 = factory.generateAgent(agent_1.getSelectedIndex(), parent, Player.PLAYER_1, heuristic);
+				Agent player_2 = factory.generateAgent(agent_2.getSelectedIndex(), parent, Player.PLAYER_2, heuristic);
 				parent.next_state();
 				game.play_game(board, player_1, player_2, parent.getGameWindow());
 				parent.next_state();

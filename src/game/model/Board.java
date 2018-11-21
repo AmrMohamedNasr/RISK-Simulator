@@ -1,5 +1,6 @@
 package game.model;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -26,6 +27,8 @@ public class Board implements GameBoard {
 			List<Set<Node>> continents, List<Integer> continentBonus) {
 		this.player_1 = player_1;
 		this.player_2 = player_2;
+		this.player_1_set = new HashSet<Node>(player_1);
+		this.player_2_set = new HashSet<Node>(player_2);
 		this.edges = edges;
 		this.continents = continents;
 		this.continents_bonus = continentBonus;
