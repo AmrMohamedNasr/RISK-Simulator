@@ -1,6 +1,7 @@
 package game.model;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import game.model.info_capsules.Attack;
@@ -19,6 +20,8 @@ public interface GameBoard {
 	public Set<Node> getPlayerNodesSet(Player player);
 	
 	public List<Node> getPlayerNodes(Player player);
+	
+	public Map<Integer, Node> getPlayerNodesMap(Player player);
 	
 	public List<Attack> getPlayerPossibleAttacks(Player player);
 	

@@ -63,10 +63,10 @@ public class AggressiveAgent implements Agent {
 			Node plNode, opNode;
 			if (board.node_belongs_to(player, attackingEdges.get(i).first)) {
 				plNode = board.getNodeById(player, attackingEdges.get(i).first);
-				opNode = board.getNodeById(player.reverseTurn(player), attackingEdges.get(i).second);
+				opNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(i).second);
 			} else {
 				plNode = board.getNodeById(player, attackingEdges.get(i).second);
-				opNode = board.getNodeById(player.reverseTurn(player), attackingEdges.get(i).first);
+				opNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(i).first);
 			}
 			if (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() > maxDamage) {
 				maxDamage = opNode.getArmies();

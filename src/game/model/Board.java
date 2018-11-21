@@ -1,8 +1,10 @@
 package game.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import game.model.info_capsules.Attack;
@@ -14,10 +16,8 @@ import game.model.info_capsules.Attack;
  *
  */
 public class Board implements GameBoard {
-	private List<Node> player_1;
-	private Set<Node> player_1_set;
-	private List<Node> player_2;
-	private Set<Node> player_2_set;
+	private Map<Integer, Node> player_1_set;
+	private Map<Integer, Node> player_2_set;
 	private List<Pair<Integer, Integer>> edges;
 	private List<Pair<Integer, Integer>> attackingEdges;
 	private boolean last_turn_attack_1;
@@ -27,13 +27,45 @@ public class Board implements GameBoard {
 
 	public Board(Set<Node> player_1, Set<Node> player_2, List<Pair<Integer, Integer>> edges,
 			List<Set<Node>> continents, List<Integer> continentBonus) {
-		this.player_1_set = player_1;
-		this.player_2_set = player_2;
+		this.player_1_set = new HashMap<Integer, Node>();
+		this.player_2_set = new HashMap<Integer, Node>();
+		for (Node n : player_1) {
+			this.player_1_set.put(n.getId(), n);
+		}
+		for (Node n : player_2) {
+			this.player_2_set.put(n.getId(), n);
+		}
 		this.edges = edges;
+		this.attackingEdges = new ArrayList<Pair<Integer, Integer>>();
+		for (int i = 0; i < edges.size(); i++) {
+			if (player_2_set.containsKey(edges.get(i).first) != player_2_set.containsKey(edges.get(i).second)) {
+				this.attackingEdges.add(edges.get(i));
+			}
+		}
 		this.continents = continents;
 		this.continents_bonus = continentBonus;
+		last_turn_attack_1 = false;
+		last_turn_attack_2 = false;
 	}
 
+	public Board(Map<Integer, Node> player_1, Map<Integer, Node> player_2, List<Pair<Integer, Integer>> edges,
+			List<Set<Node>> continents, List<Integer> continentBonus) {
+		this.player_1_set = player_1;
+		this.player_2_set = player_2;
+		
+		this.edges = edges;
+		this.attackingEdges = new ArrayList<Pair<Integer, Integer>>();
+		for (int i = 0; i < edges.size(); i++) {
+			if (player_2.containsKey(edges.get(i).first) != player_2.containsKey(edges.get(i).second)) {
+				this.attackingEdges.add(edges.get(i));
+			}
+		}
+		this.continents = continents;
+		this.continents_bonus = continentBonus;
+		last_turn_attack_1 = false;
+		last_turn_attack_2 = false;
+	}
+	
 	@Override
 	public List<GameBoard> generateBoardPlacementChildren(Player player) {
 		// TODO Auto-generated method stub
@@ -48,39 +80,46 @@ public class Board implements GameBoard {
 
 	@Override
 	public GameBoard copyBoard() {
-		Set<Node> tempPly1Set = copySet(this.player_1_set);
-		Set<Node> tempPly2Set = copySet(this.player_2_set);
-		List<Set<Node>> tempContinents = new ArrayList<>();	
-		for (int i = 0; i < this.continents.size(); i++) {
-			Set<Node> tempContinent = copySet(this.continents.get(i));
-			tempContinents.add(tempContinent);
-		}
-		List<Integer> tempContinentBonus = new ArrayList<>();
-		for (int i = 0; i < this.continents_bonus.size(); i++) {
-			tempContinentBonus.add(this.continents_bonus.get(i));
-		}
-		List<Pair<Integer, Integer>> tempEdges = new ArrayList<>();
-		for (int i = 0; i < edges.size(); i++) {
-			//TODO l laptop hyfsel 5alas w mkasel aroo7 ash7eno :"D
-		}
-		
-		return null;
+		Map<Integer, Node> tempPly1Set = copyMap(this.player_1_set);
+		Map<Integer, Node> tempPly2Set = copyMap(this.player_2_set);
+		return new Board(tempPly1Set, tempPly2Set, edges, continents, continents_bonus);
 	}
 	
-	private Set<Node> copySet(Set<Node> nodes) {
-		Set<Node> tempNodes = new HashSet<>();
-		for(Node node: nodes) {
+	private Map<Integer, Node> copyMap(Map<Integer, Node> nodes) {
+		Map<Integer, Node> tempNodes = new HashMap<Integer, Node>();
+		for(Node node: nodes.values()) {
 			Node temp = new Node(node.getId(), node.getArmies());
-			for (int i = 0; i < node.getEdges().size(); i++) {
-				temp.addEdge(node.getEdges().get(i));
-			}
-			tempNodes.add(temp);
+			temp.setEdges(node.getEdges());
+			tempNodes.put(temp.getId(), temp);
 		}
 		return tempNodes;
 	}
 
 	@Override
 	public Set<Node> getPlayerNodesSet(Player player) {
+		if (player == null) {
+			throw new RuntimeException("Must assign a player");
+		}
+		if (player == Player.PLAYER_1) {
+			return new HashSet<Node>(player_1_set.values());
+		} else {
+			return new HashSet<Node>(player_2_set.values());
+		}
+	}
+
+	@Override
+	public List<Node> getPlayerNodes(Player player) {
+		if (player == null) {
+			throw new RuntimeException("Must assign a player");
+		}
+		if (player == Player.PLAYER_1) {
+			return new ArrayList<Node>(player_1_set.values());
+		} else {
+			return new ArrayList<Node>(player_2_set.values());
+		}
+	}
+	
+	public Map<Integer, Node> getPlayerNodesMap(Player player) {
 		if (player == null) {
 			throw new RuntimeException("Must assign a player");
 		}
@@ -92,37 +131,33 @@ public class Board implements GameBoard {
 	}
 
 	@Override
-	public List<Node> getPlayerNodes(Player player) {
-		if (player == null) {
-			throw new RuntimeException("Must assign a player");
-		}
-		if (player == Player.PLAYER_1) {
-			return player_1;
-		} else {
-			return player_2;
-		}
-	}
-
-	@Override
 	public List<Attack> getPlayerPossibleAttacks(Player player) {
-		List<Attack> attacks = new ArrayList<>();
-		Set<Node> attacker_set = getPlayerNodesSet(player);
-		Set<Node> attacked_set;
+		List<Attack> attacks = new ArrayList<Attack>();
+		Map<Integer, Node> attacker_set, attacked_set;
 		if (player == Player.PLAYER_1) {
-			attacked_set = getPlayerNodesSet(Player.PLAYER_2);
+			attacker_set = player_1_set;
+			attacked_set = player_2_set;
 		} else {
-			attacked_set = getPlayerNodesSet(Player.PLAYER_1);
+			attacker_set = player_2_set;
+			attacked_set = player_1_set;
 		}
-		for (Node node : attacker_set) {
-			for (Node node2 : attacked_set) {
-				if (!areNeighbours(node, node2)) {
-					continue;
-				}
-				for (int i = node.getArmies() - 1; i - node2.getArmies() > 0; i--) {
-					attacks.add(new Attack(false, node.getId(), node2.getId(), i));
-				}
+		for (int i = 0; i < this.attackingEdges.size(); i++) {
+			Pair<Integer, Integer> edge = this.attackingEdges.get(i);
+			int src, dest;
+			if (attacker_set.containsKey(edge.first)) {
+				src = edge.first;
+				dest = edge.second;
+			} else {
+				src = edge.second;
+				dest = edge.first;
+			}
+			Node srcN = attacker_set.get(src);
+			Node destN = attacked_set.get(dest);
+			for (int u = 1; u < srcN.getArmies() - destN.getArmies() - 1; u++) {
+				attacks.add(new Attack(true, src, dest, u));
 			}
 		}
+		attacks.add(new Attack(false, 0, 0, 0));
 		return attacks;
 	}
 
@@ -131,24 +166,19 @@ public class Board implements GameBoard {
 		if (player == null) {
 			throw new RuntimeException("Must assign a player");
 		}
-		Set<Node> plNodes;
+		Map<Integer, Node> plNodes;
 		if (player == Player.PLAYER_1) {
 			plNodes = player_1_set;
 		} else {
 			plNodes = player_2_set;
 		}
-		for (Node nodeT : plNodes) {
-			if (nodeT.getId() == node) {
-				return true;
-			}
-		}
-		return false;
+		return plNodes.containsKey(node);
 	}
 
 	@Override
 	public int get_turn_unit_number(Player player) {
 		int sum = 0;
-		Set<Node> set = getPlayerNodesSet(player);
+		Map<Integer, Node> set = getPlayerNodesMap(player);
 		if (player == Player.PLAYER_1 && last_turn_attack_1) {
 			sum += 2;
 		} else if (player == Player.PLAYER_2 && last_turn_attack_2) {
@@ -158,7 +188,7 @@ public class Board implements GameBoard {
 		for (int i = 0; i < continents.size(); i++) {
 			boolean all = true;
 			for (Node node : continents.get(i)) {
-				if (!set.contains(node)) {
+				if (!set.containsKey(node.getId())) {
 					all = false;
 					break;
 				}
@@ -185,6 +215,11 @@ public class Board implements GameBoard {
 		int src = attack.src;
 		int dest = attack.dest;
 		int units_to_move = attack.units_to_move;
+		if (player == Player.PLAYER_1) {
+			this.last_turn_attack_1 = willAttack && units_to_move > 0 && player_1_set.containsKey(src) != player_1_set.containsKey(dest);
+		} else {
+			this.last_turn_attack_2 = willAttack && units_to_move > 0 && player_1_set.containsKey(src) != player_1_set.containsKey(dest);
+		}
 		if (!willAttack || units_to_move < 1) {
 			return;
 		}
@@ -193,26 +228,19 @@ public class Board implements GameBoard {
 				|| (node_belongs_to(Player.PLAYER_2, src) && node_belongs_to(Player.PLAYER_2, dest))) {
 			return;
 		}
-		Set<Node> attacker_set = getPlayerNodesSet(player), attacked_set;
+		Map<Integer, Node> attacker_set = getPlayerNodesMap(player), attacked_set = getPlayerNodesMap(player.reverseTurn());
 		Node source = getNodeById(player, src);
-		if (source == null) {
+		Node destination = getNodeById(player.reverseTurn(), dest);
+		if (source == null || destination == null) {
 			return;
 		}
-		Node destination;
-		if (player == Player.PLAYER_1) {
-			attacked_set = player_2_set;
-			destination = getNodeById(Player.PLAYER_2, dest);
-		} else {
-			attacked_set = player_1_set;
-			destination = getNodeById(Player.PLAYER_1, dest);
-		}
-		if (source.getArmies() - units_to_move < 1 || destination == null) {
+		if (source.getArmies() - units_to_move - destination.getArmies() < 1) {
 			return;
 		}
-		source.setArmies(source.getArmies() - units_to_move);
+		source.setArmies(source.getArmies() - destination.getArmies() - units_to_move);
 		destination.setArmies(units_to_move);
-		attacker_set.add(destination);
-		attacked_set.remove(destination);
+		attacker_set.put(destination.getId(), destination);
+		attacked_set.remove(destination.getId());
 	}
 
 	@Override
@@ -222,16 +250,14 @@ public class Board implements GameBoard {
 
 	@Override
 	public Node getNodeById(Player player, int node) {
-		Set<Node> plNodes;
+		Map<Integer, Node> plNodes;
 		if (player == Player.PLAYER_1) {
 			plNodes = player_1_set;
 		} else {
 			plNodes = player_2_set;
 		}
-		for (Node nodeT : plNodes) {
-			if (nodeT.getId() == node) {
-				return nodeT;
-			}
+		if (plNodes.containsKey(node)) {
+			return plNodes.get(node);
 		}
 		return null;
 	}
@@ -244,16 +270,6 @@ public class Board implements GameBoard {
 	@Override
 	public List<Pair<Integer, Integer>> getEdges() {
 		return this.edges;
-	}
-
-	private boolean areNeighbours(Node node1, Node node2) {
-		for (Pair<Integer, Integer> pair : edges) {
-			if ((pair.first == node1.getId() && pair.second == node2.getId())
-					|| (pair.first == node2.getId() && pair.second == node1.getId())) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 }

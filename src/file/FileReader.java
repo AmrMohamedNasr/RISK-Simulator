@@ -56,7 +56,8 @@ public class FileReader implements BoardReader {
 			}
 			edges.get(i).first = first;
 			edges.get(i).second = second;
-
+			nodes.get(first - 1).addEdge(second);
+			nodes.get(second - 1).addEdge(first);
 		}
 
 		int p = readInt(in.nextLine(), "P", "");
@@ -90,7 +91,7 @@ public class FileReader implements BoardReader {
 
 		player_1 = new ArrayList<>();
 		String temp[] = in.nextLine().split(" ");
-		for (int i = 0; i < temp.length; i++) {
+		for (int i = 0; i < temp.length / 2; i++) {
 			int node, army;
 			try {
 				node = Integer.parseInt(temp[2 * i].trim());
@@ -109,7 +110,7 @@ public class FileReader implements BoardReader {
 
 		player_2 = new ArrayList<>();
 		temp = in.nextLine().split(" ");
-		for (int i = 0; i < temp.length; i++) {
+		for (int i = 0; i < temp.length / 2; i++) {
 			int node, army;
 			try {
 				node = Integer.parseInt(temp[2 * i].trim());
@@ -128,7 +129,7 @@ public class FileReader implements BoardReader {
 
 		in.close();
 
-		return new Board(player_1, player_2, edges, continents, continentBonus);
+		return new Board(new HashSet<Node>(player_1), new HashSet<Node>(player_2), edges, continents, continentBonus);
 	}
 
 	private int readInt(String s, String prefix, String suffix) {

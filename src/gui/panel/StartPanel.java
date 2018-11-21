@@ -77,9 +77,11 @@ public class StartPanel extends JPanel {
 				try {
 					board = reader.parseFile(file);
 					if (board == null) {
+						System.out.println("Null board");
 						return;
 					}
 				} catch (Exception exc) {
+					exc.printStackTrace();
 					return;
 				}
 				GameHeuristic heuristic = new RiskGameHeuristic();

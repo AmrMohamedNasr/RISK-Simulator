@@ -14,7 +14,6 @@ import agent.search.non_ai.AggressiveAgent;
 import agent.search.non_ai.HumanAgent;
 import agent.search.non_ai.PacifistAgent;
 import agent.search.non_ai.PassiveAgent;
-import game.model.GameBoard;
 import game.model.Player;
 
 public class ConcreteAgentFactory implements AgentFactory {

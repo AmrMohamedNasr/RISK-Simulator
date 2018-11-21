@@ -44,6 +44,10 @@ public class Node {
 		return edges;
 	}
 	
+	public void setEdges(List<Integer> edges) {
+		this.edges = edges;
+	}
+	
 	public int getArmies() {
 		return armies;
 	}
