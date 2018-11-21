@@ -53,7 +53,8 @@ public class AggressiveAgent implements Agent {
 		Attack tempAttack = new Attack(false, 0, 0, 0);
 		Set<Node> nodes = board.getPlayerNodesSet(player);
 		for (Node node: nodes) {
-			if (node.getArmies() > maxArmies) {
+			if (node.getArmies() > maxArmies ||
+					(node.getArmies() == maxArmies && node.getId() < tempPlaceNode.getId())) {
 				maxArmies = node.getArmies();
 				tempPlaceNode = node;
 			}
@@ -68,7 +69,8 @@ public class AggressiveAgent implements Agent {
 				plNode = board.getNodeById(player, attackingEdges.get(i).second);
 				opNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(i).first);
 			}
-			if (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() > maxDamage) {
+			if (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() > maxDamage || 
+					(plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() == maxDamage && tempAttack.src == plNode.getId() )) {
 				maxDamage = opNode.getArmies();
 				// assume all possible armies will go to new node conquered.
 				tempAttack = new Attack(true, plNode.getId(), opNode.getId(), plNode.getArmies() - opNode.getArmies() - 1);
