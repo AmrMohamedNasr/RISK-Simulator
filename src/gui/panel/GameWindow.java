@@ -3,5 +3,6 @@ package gui.panel;
 import game.model.GameBoard;
 
 public interface GameWindow {
-	void update_graph(GameBoard board);
+	void draw_graph(GameBoard board);
+	void update_node(int node, GameBoard board);
 }

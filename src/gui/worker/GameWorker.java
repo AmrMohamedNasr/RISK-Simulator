@@ -1,11 +1,13 @@
 package gui.worker;
 
+import javax.swing.SwingWorker;
+
 import agent.Agent;
 import game.Game;
 import game.model.GameBoard;
 import gui.RiskFrame;
 
-public class GameWorker implements Runnable {
+public class GameWorker extends SwingWorker<String, Void> {
 	
 	private Game game;
 	private GameBoard board;
@@ -23,13 +25,12 @@ public class GameWorker implements Runnable {
 		this.parent = parent;
 	}
 
-
-
 	@Override
-	public void run() {
+	protected String doInBackground() throws Exception {
 		game.play_game(board, player_1, player_2, parent.getGameWindow());
 		parent.next_state();
 		parent.getEndGamePanel().show_results(game.get_game_results());
+		return null;
 	}
 
 }

@@ -104,9 +104,9 @@ public class GamePanel extends JPanel implements GameWindow {
     			+ " text-size: 12;"
     			+ "}");
 	}
-	
+
 	@Override
-	public void update_graph(GameBoard board) {
+	public void draw_graph(GameBoard board) {
 		clear();
 		List<Node> player_nodes = board.getPlayerNodes(Player.PLAYER_1);
 		for (int i = 0; i < player_nodes.size(); i++) {
@@ -129,9 +129,24 @@ public class GamePanel extends JPanel implements GameWindow {
 			graph.addEdge(String.valueOf(edges.get(i).first) + "-" + String.valueOf(edges.get(i).second),
 					String.valueOf(edges.get(i).first),
 					String.valueOf(edges.get(i).second), false);
-		
 		}
-		this.repaint();
+	}
+
+	@Override
+	public void update_node(int node, GameBoard board) {
+		String str_id = String.valueOf(node);
+		Player player = Player.PLAYER_1;
+		Node n = board.getNodeById(player, node);
+		if (n == null) {
+			player = player.reverseTurn();
+			n = board.getNodeById(player, node);
+			if (n == null) {
+				return;
+			}
+		}
+		graph.getNode(str_id).changeAttribute("ui.label", "Id : " + str_id + " | Units : "
+				+ String.valueOf(n.getArmies()));
+		graph.getNode(str_id).changeAttribute("ui.class", player.toString());
 	}
 
 }

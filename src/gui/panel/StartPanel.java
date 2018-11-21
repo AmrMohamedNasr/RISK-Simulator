@@ -89,7 +89,7 @@ public class StartPanel extends JPanel {
 				Agent player_2 = factory.generateAgent(agent_2.getSelectedIndex(), parent, Player.PLAYER_2, heuristic);
 				parent.next_state();
 				GameWorker worker = new GameWorker(game, board, player_1, player_2, parent);
-				SwingUtilities.invokeLater(worker);
+				worker.execute();
 			}
 		});
 	}
