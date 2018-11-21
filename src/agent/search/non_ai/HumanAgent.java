@@ -1,5 +1,7 @@
 package agent.search.non_ai;
 
+import java.awt.Dialog;
+
 import javax.swing.JFrame;
 
 import agent.Agent;
@@ -29,9 +31,14 @@ public class HumanAgent implements Agent {
 	 * Attack action. 
 	 */
 	private Attack attack;
+	/**
+	 * JFrame.
+	 */
+	private JFrame parent;
 	
 	public HumanAgent(Player player, JFrame parent) {
 		this.player = player;
+		this.parent = parent;
 	}
 	
 	@Override
@@ -47,7 +54,6 @@ public class HumanAgent implements Agent {
 	@Override
 	public void observe_enviroment(GameBoard board) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
