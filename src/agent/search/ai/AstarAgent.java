@@ -8,20 +8,18 @@ import game.model.info_capsules.Attack;
 
 public class AstarAgent implements SearchAgent {
 
-	
 	/**
 	 * heuristic function used in search.
 	 */
 	private GameHeuristic heuristic;
-	
-	
-	
+
 	public AstarAgent(Player player, GameHeuristic heuristic) {
 		if (heuristic == null) {
 			throw new RuntimeException("Must give heurstic function to A* search");
 		}
 		this.heuristic = heuristic;
 	}
+
 	@Override
 	public String getAgentName() {
 		// TODO Auto-generated method stub
@@ -37,7 +35,7 @@ public class AstarAgent implements SearchAgent {
 	@Override
 	public void observe_enviroment(GameBoard board) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

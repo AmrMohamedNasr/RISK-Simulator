@@ -9,18 +9,16 @@ import gui.panel.InputPanel;
 
 /**
  * 
- * @author Michael
- * Agent that reads the next move from the user.
+ * @author Michael Agent that reads the next move from the user.
  */
 public class HumanAgent implements Agent {
 
-	
 	/**
 	 * player uses this agent.
 	 */
 	private Player player;
 	/**
-	 * JFrame.
+	 * Input panel.
 	 */
 	private InputPanel inputP;
 	/**
@@ -32,7 +30,7 @@ public class HumanAgent implements Agent {
 		this.player = player;
 		this.inputP = parent.getInputPanel();
 	}
-	
+
 	@Override
 	public String getAgentName() {
 		return "Human Agent";
@@ -61,7 +59,5 @@ public class HumanAgent implements Agent {
 		this.inputP.waitForInput();
 		return this.inputP.getAttackInput();
 	}
-
-	
 
 }
