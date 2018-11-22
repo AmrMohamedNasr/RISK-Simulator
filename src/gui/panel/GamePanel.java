@@ -1,6 +1,7 @@
 package gui.panel;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import game.model.GameBoard;
 import game.model.Node;
 import game.model.Pair;
 import game.model.Player;
+import game.model.Stage;
 
 public class GamePanel extends JPanel implements GameWindow {
 
@@ -40,8 +42,12 @@ public class GamePanel extends JPanel implements GameWindow {
 	 * Graph
 	 */
 	private Graph graph;
-	
-	public GamePanel() {
+	/**
+	 * Panel for log info.
+	 */
+	private LogPanel panel;
+	public GamePanel(LogPanel logPanel) {
+		this.panel = logPanel;
 		graph = new MultiGraph("Drawable graph");
 		graph.addAttribute("ui.quality");
         graph.addAttribute("ui.antialias");
@@ -68,7 +74,7 @@ public class GamePanel extends JPanel implements GameWindow {
 		System.setProperty("org.graphstream.ui.renderer",
     			"org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		viewer =  new Viewer(graph,
-				Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.enableAutoLayout();
 		view = viewer.addDefaultView(false);
 		this.setLayout(new BorderLayout());
@@ -81,6 +87,7 @@ public class GamePanel extends JPanel implements GameWindow {
 	 */
 	private final void clear() {
 		graph.clear();
+		panel.clear_log();
 		graph.addAttribute("ui.quality");
         graph.addAttribute("ui.antialias");
         graph.setStrict(false);
@@ -95,7 +102,7 @@ public class GamePanel extends JPanel implements GameWindow {
     			+ " fill-color : red;"
     			+ " }"
     			+ "node.PLAYER_2 {"
-    			+ " fill-color : black;"
+    			+ " fill-color : blue;"
     			+ " }"
     			+ "edge {"
     			+ " text-mode: normal;"
@@ -115,6 +122,8 @@ public class GamePanel extends JPanel implements GameWindow {
 			graph.getNode(str_id).addAttribute("ui.label", "Id : " + str_id + " | Units : "
 					+ String.valueOf(player_nodes.get(i).getArmies()));
 			graph.getNode(str_id).addAttribute("ui.class", "PLAYER_1");
+			graph.getNode(str_id).addAttribute("units",
+					player_nodes.get(i).getArmies());
 		}
 		player_nodes = board.getPlayerNodes(Player.PLAYER_2);
 		for (int i = 0; i < player_nodes.size(); i++) {
@@ -123,6 +132,8 @@ public class GamePanel extends JPanel implements GameWindow {
 			graph.getNode(str_id).addAttribute("ui.label", "Id : " + str_id + " | Units : "
 					+ String.valueOf(player_nodes.get(i).getArmies()));
 			graph.getNode(str_id).addAttribute("ui.class", "PLAYER_2");
+			graph.getNode(str_id).addAttribute("units",
+					player_nodes.get(i).getArmies());
 		}
 		List<Pair<Integer, Integer>> edges = board.getEdges();
 		for (int i = 0; i < edges.size(); i++) {
@@ -133,7 +144,7 @@ public class GamePanel extends JPanel implements GameWindow {
 	}
 
 	@Override
-	public void update_node(int node, GameBoard board) {
+	public void update_node(int node, GameBoard board, Stage stage, int auxNode) {
 		String str_id = String.valueOf(node);
 		Player player = Player.PLAYER_1;
 		Node n = board.getNodeById(player, node);
@@ -144,9 +155,43 @@ public class GamePanel extends JPanel implements GameWindow {
 				return;
 			}
 		}
+		int oldUnits = graph.getNode(str_id).getAttribute("units");
 		graph.getNode(str_id).changeAttribute("ui.label", "Id : " + str_id + " | Units : "
 				+ String.valueOf(n.getArmies()));
 		graph.getNode(str_id).changeAttribute("ui.class", player.toString());
+		graph.getNode(str_id).changeAttribute("units",
+				n.getArmies());
+		String splayer;
+		Color color;
+		if (player == Player.PLAYER_1) {
+			splayer = "- Player 1";
+			color = Color.red;
+		} else {
+			splayer = "- Player 2";
+			color = Color.blue;
+		}
+		if (stage == Stage.ATTACK) {
+			if (auxNode == -1) {
+				panel.add_to_log(splayer + " won't attack.\n", color);
+			} else {
+				String aux_str = String.valueOf(auxNode);
+				int armies = graph.getNode(aux_str).getAttribute("units");
+				Node m = board.getNodeById(player, auxNode);
+				graph.getNode(aux_str).changeAttribute("ui.label", "Id : " + aux_str + " | Units : "
+					+ String.valueOf(m.getArmies()));
+				graph.getNode(aux_str).changeAttribute("units", m.getArmies());
+				splayer += " attacks " + str_id + "(" + String.valueOf(oldUnits) + ")"
+						+ " from " + String.valueOf(auxNode) + "("
+						+ String.valueOf(armies) + ") and moves "
+						+ String.valueOf(n.getArmies()) + " units to it.\n";
+				panel.add_to_log(splayer, color);
+			}
+		} else {
+			splayer += " places " 
+					+ String.valueOf(n.getArmies() - oldUnits) 
+					+ " units in " + str_id + ".\n";
+			panel.add_to_log(splayer, color);
+		}
 	}
 
 }
