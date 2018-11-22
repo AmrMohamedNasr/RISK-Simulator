@@ -46,8 +46,14 @@ public class GamePanel extends JPanel implements GameWindow {
 	 * Panel for log info.
 	 */
 	private LogPanel panel;
-	public GamePanel(LogPanel logPanel) {
+	/**
+	 * Panel to indicate turn.
+	 */
+	private TurnPanel turnPanel;
+	
+	public GamePanel(LogPanel logPanel, TurnPanel turnPanel) {
 		this.panel = logPanel;
+		this.turnPanel = turnPanel;
 		graph = new MultiGraph("Drawable graph");
 		graph.addAttribute("ui.quality");
         graph.addAttribute("ui.antialias");
@@ -115,6 +121,7 @@ public class GamePanel extends JPanel implements GameWindow {
 	@Override
 	public void draw_graph(GameBoard board) {
 		clear();
+		this.turnPanel.updateTurn("Player 1 : Place Your Units.", Player.PLAYER_1);
 		List<Node> player_nodes = board.getPlayerNodes(Player.PLAYER_1);
 		for (int i = 0; i < player_nodes.size(); i++) {
 			String str_id = String.valueOf(player_nodes.get(i).getId()); 
@@ -162,6 +169,8 @@ public class GamePanel extends JPanel implements GameWindow {
 		graph.getNode(str_id).changeAttribute("units",
 				n.getArmies());
 		String splayer;
+		String nextTurn;
+		Player turnPlayer;
 		Color color;
 		if (player == Player.PLAYER_1) {
 			splayer = "- Player 1";
@@ -186,12 +195,27 @@ public class GamePanel extends JPanel implements GameWindow {
 						+ String.valueOf(n.getArmies()) + " units to it.\n";
 				panel.add_to_log(splayer, color);
 			}
+			if (player == Player.PLAYER_1) {
+				nextTurn = "Player 2 : Place Your Units.";
+				turnPlayer = Player.PLAYER_2;
+			} else {
+				nextTurn = "Player 1 : Place Your Units.";
+				turnPlayer = Player.PLAYER_1;
+			}
 		} else {
 			splayer += " places " 
 					+ String.valueOf(n.getArmies() - oldUnits) 
 					+ " units in " + str_id + ".\n";
 			panel.add_to_log(splayer, color);
+			if (player == Player.PLAYER_1) {
+				nextTurn = "Player 1 : Decide Your Attack.";
+				turnPlayer = Player.PLAYER_1;
+			} else {
+				nextTurn = "Player 2 : Decide Your Attack.";
+				turnPlayer = Player.PLAYER_2;
+			}
 		}
+		this.turnPanel.updateTurn(nextTurn, turnPlayer);
 	}
 
 }

@@ -161,6 +161,36 @@ public class Board implements GameBoard {
 		return attacks;
 	}
 
+	public List<Attack> getPlayerUniqueAttacks(Player player) {
+		List<Attack> attacks = new ArrayList<Attack>();
+		Map<Integer, Node> attacker_set, attacked_set;
+		if (player == Player.PLAYER_1) {
+			attacker_set = player_1_set;
+			attacked_set = player_2_set;
+		} else {
+			attacker_set = player_2_set;
+			attacked_set = player_1_set;
+		}
+		for (int i = 0; i < this.attackingEdges.size(); i++) {
+			Pair<Integer, Integer> edge = this.attackingEdges.get(i);
+			int src, dest;
+			if (attacker_set.containsKey(edge.first)) {
+				src = edge.first;
+				dest = edge.second;
+			} else {
+				src = edge.second;
+				dest = edge.first;
+			}
+			Node srcN = attacker_set.get(src);
+			Node destN = attacked_set.get(dest);
+			if (2 < srcN.getArmies() - destN.getArmies()) {
+				attacks.add(new Attack(true, src, dest, srcN.getArmies() - destN.getArmies() - 1));
+			}
+		}
+		attacks.add(new Attack(false, 0, 0, 0));
+		return attacks;
+	}
+	
 	@Override
 	public boolean node_belongs_to(Player player, int node) {
 		if (player == null) {

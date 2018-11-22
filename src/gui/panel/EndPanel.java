@@ -30,11 +30,17 @@ public class EndPanel extends JPanel implements EndGamePanel {
 	
 	public EndPanel(RiskFrame frame) {
 		players = new JLabel("");
+		players.setAlignmentX(CENTER_ALIGNMENT);
 		winner = new JLabel("");
+		winner.setAlignmentX(CENTER_ALIGNMENT);
 		metric_1 = new JLabel("");
 		metric_100 = new JLabel("");
 		metric_10000 = new JLabel("");
+		metric_1.setAlignmentX(CENTER_ALIGNMENT);
+		metric_100.setAlignmentX(CENTER_ALIGNMENT);
+		metric_10000.setAlignmentX(CENTER_ALIGNMENT);
 		returnButton = new JButton("Return To Menu");
+		returnButton.setAlignmentX(CENTER_ALIGNMENT);
 		returnButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -50,7 +56,7 @@ public class EndPanel extends JPanel implements EndGamePanel {
 		layout.add(metric_1);
 		layout.add(metric_100);
 		layout.add(metric_10000);
-		layout.add(Box.createVerticalStrut(40));
+		layout.add(Box.createVerticalStrut(20));
 		layout.add(returnButton);
 		layout.add(Box.createVerticalGlue());
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));

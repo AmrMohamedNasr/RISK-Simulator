@@ -10,8 +10,10 @@ import gui.panel.EndGamePanel;
 import gui.panel.EndPanel;
 import gui.panel.GamePanel;
 import gui.panel.GameWindow;
+import gui.panel.InputPanel;
 import gui.panel.LogPanel;
 import gui.panel.StartPanel;
+import gui.panel.TurnPanel;
 
 public class RiskFrame extends JFrame {
 	/**
@@ -23,6 +25,8 @@ public class RiskFrame extends JFrame {
 	private GamePanel gamePanel;
 	private StartPanel startPanel;
 	private LogPanel logPanel;
+	private TurnPanel turnPanel;
+	private InputPanel inputPanel;
 	private int current_state;
 	private JLabel background;
 	
@@ -30,8 +34,10 @@ public class RiskFrame extends JFrame {
 		current_state = 0;
 		startPanel = new StartPanel(this);
 		logPanel = new LogPanel(this);
-		gamePanel = new GamePanel(logPanel);
+		turnPanel = new TurnPanel();
+		gamePanel = new GamePanel(logPanel, turnPanel);
 		endPanel = new EndPanel(this);
+		inputPanel = new InputPanel();
 		this.setPreferredSize(new Dimension(1000, 1000));
 		this.setSize(1000, 1000);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,11 +63,14 @@ public class RiskFrame extends JFrame {
 			background.add(startPanel, BorderLayout.CENTER);
 		} else if (current_state == 1) {
 			this.setLayout(new BorderLayout());
+			this.add(inputPanel, BorderLayout.NORTH);
 			this.add(gamePanel, BorderLayout.CENTER);
 			this.add(logPanel, BorderLayout.EAST);
+			this.add(turnPanel, BorderLayout.SOUTH);
 		} else if (current_state == 2) {
 			this.setLayout(new BorderLayout());
-			this.add(endPanel, BorderLayout.CENTER);
+			this.add(gamePanel, BorderLayout.CENTER);
+			this.add(endPanel, BorderLayout.SOUTH);
 		}
 		this.revalidate();
 		this.repaint();
@@ -73,5 +82,9 @@ public class RiskFrame extends JFrame {
 	
 	public EndGamePanel getEndGamePanel() {
 		return endPanel;
+	}
+	
+	public InputPanel getInputPanel() {
+		return this.inputPanel;
 	}
 }

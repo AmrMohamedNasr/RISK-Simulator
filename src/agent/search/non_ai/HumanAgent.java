@@ -1,15 +1,11 @@
 package agent.search.non_ai;
 
-import java.awt.Dialog;
-
-import javax.swing.JFrame;
-
 import agent.Agent;
-import agent.search.SearchAgent;
 import game.model.GameBoard;
-import game.model.Node;
 import game.model.Player;
 import game.model.info_capsules.Attack;
+import gui.RiskFrame;
+import gui.panel.InputPanel;
 
 /**
  * 
@@ -24,26 +20,22 @@ public class HumanAgent implements Agent {
 	 */
 	private Player player;
 	/**
-	 * node to place armies in.
-	 */
-	private Node placeNode;
-	/**
-	 * Attack action. 
-	 */
-	private Attack attack;
-	/**
 	 * JFrame.
 	 */
-	private JFrame parent;
+	private InputPanel inputP;
+	/**
+	 * Board.
+	 */
+	private GameBoard board;
 	
-	public HumanAgent(Player player, JFrame parent) {
+	public HumanAgent(Player player, RiskFrame parent) {
 		this.player = player;
-		this.parent = parent;
+		this.inputP = parent.getInputPanel();
 	}
 	
 	@Override
 	public String getAgentName() {
-		return "HumanAgent";
+		return "Human Agent";
 	}
 
 	@Override
@@ -53,19 +45,21 @@ public class HumanAgent implements Agent {
 
 	@Override
 	public void observe_enviroment(GameBoard board) {
-		// TODO Auto-generated method stub
+		this.board = board;
 	}
 
 	@Override
 	public int place_action() {
-		// TODO Auto-generated method stub
-		return 0;
+		this.inputP.place_turn(board, player);
+		this.inputP.waitForInput();
+		return this.inputP.getPlaceInput();
 	}
 
 	@Override
 	public Attack attack_action() {
-		// TODO Auto-generated method stub
-		return null;
+		this.inputP.attack_turn(board, player);
+		this.inputP.waitForInput();
+		return this.inputP.getAttackInput();
 	}
 
 	

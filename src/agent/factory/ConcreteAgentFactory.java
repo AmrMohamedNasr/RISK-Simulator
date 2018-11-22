@@ -3,8 +3,6 @@ package agent.factory;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
-
 import agent.Agent;
 import agent.heuristic.GameHeuristic;
 import agent.search.ai.AstarAgent;
@@ -15,6 +13,7 @@ import agent.search.non_ai.HumanAgent;
 import agent.search.non_ai.PacifistAgent;
 import agent.search.non_ai.PassiveAgent;
 import game.model.Player;
+import gui.RiskFrame;
 
 public class ConcreteAgentFactory implements AgentFactory {
 	
@@ -38,7 +37,7 @@ public class ConcreteAgentFactory implements AgentFactory {
 	}
 
 	@Override
-	public Agent generateAgent(int id, JFrame parent, Player player, GameHeuristic heuristic) {
+	public Agent generateAgent(int id, RiskFrame parent, Player player, GameHeuristic heuristic) {
 		switch(id) {
 		case 0:
 			return new PassiveAgent(player);

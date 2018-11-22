@@ -1,11 +1,8 @@
 package agent.search.non_ai;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import agent.Agent;
-import agent.search.SearchAgent;
 import game.model.GameBoard;
 import game.model.Node;
 import game.model.Player;
@@ -36,7 +33,7 @@ public class PassiveAgent implements Agent {
 	}
 	@Override
 	public String getAgentName() {
-		return "PassiveAgent";
+		return "Passive Agent";
 	}
 
 	@Override

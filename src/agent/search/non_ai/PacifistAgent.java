@@ -36,7 +36,7 @@ public class PacifistAgent implements Agent {
 	
 	@Override
 	public String getAgentName() {
-		return "PacifistAgent";
+		return "Pacifist Agent";
 	}
 
 	@Override
