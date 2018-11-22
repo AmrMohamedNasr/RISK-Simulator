@@ -4,6 +4,7 @@ import agent.Agent;
 import agent.search.SearchAgent;
 import game.model.GameBoard;
 import game.model.Player;
+import game.model.Stage;
 import game.model.info_capsules.Attack;
 import game.model.info_capsules.EndGameInformation;
 import gui.panel.GameWindow;
@@ -27,7 +28,6 @@ public class RiskGame implements Game {
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		while (!board.isGameOver()) {
@@ -35,7 +35,7 @@ public class RiskGame implements Game {
 				player_1.observe_enviroment(board);
 				pl_a = player_1.place_action();
 				board.place_unit(player_1.getAgentPlayer(), pl_a);
-				window.update_node(pl_a, board);
+				window.update_node(pl_a, board, Stage.PLACEMENT, 0);
 				try {
 					Thread.sleep(duration);
 				} catch (InterruptedException e) {
@@ -44,7 +44,9 @@ public class RiskGame implements Game {
 				at_a = player_1.attack_action();
 				board.attack_node(player_1.getAgentPlayer(), at_a);
 				if (at_a.willAttack) {
-					window.update_node(at_a.dest, board);
+					window.update_node(at_a.dest, board, Stage.ATTACK, at_a.src);
+				} else {
+					window.update_node(pl_a, board, Stage.ATTACK, -1);
 				}
 				try {
 					Thread.sleep(duration);
@@ -56,7 +58,7 @@ public class RiskGame implements Game {
 				player_2.observe_enviroment(board);
 				pl_a = player_2.place_action();
 				board.place_unit(player_2.getAgentPlayer(), pl_a);
-				window.update_node(pl_a, board);
+				window.update_node(pl_a, board, Stage.PLACEMENT, 0);
 				try {
 					Thread.sleep(duration);
 				} catch (InterruptedException e) {
@@ -65,7 +67,9 @@ public class RiskGame implements Game {
 				at_a = player_2.attack_action();
 				board.attack_node(player_2.getAgentPlayer(), at_a);
 				if (at_a.willAttack) {
-					window.update_node(at_a.dest, board);
+					window.update_node(at_a.dest, board, Stage.ATTACK, at_a.src);
+				} else {
+					window.update_node(pl_a, board, Stage.ATTACK, -1);
 				}
 				try {
 					Thread.sleep(duration);
@@ -73,6 +77,7 @@ public class RiskGame implements Game {
 					e.printStackTrace();
 				}
 			}
+			turn = turn.reverseTurn();
 		}
 		Agent winner;
 		int exp_nodes;

@@ -1,16 +1,19 @@
 package gui.panel;
 
-import java.awt.FlowLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import agent.Agent;
@@ -36,6 +39,8 @@ public class StartPanel extends JPanel {
 
 	private JComboBox<String> agent_1;
 	private JComboBox<String> agent_2;
+	private JLabel label;
+	private JLabel riskLabel;
 	private JButton startGame;
 	private AgentFactory factory;
 	private BoardReader reader;
@@ -45,20 +50,51 @@ public class StartPanel extends JPanel {
 		factory = new ConcreteAgentFactory();
 		game = new RiskGame();
 		reader = new FileReader();
-		this.setLayout(new FlowLayout());
+		JPanel listers = new JPanel();
+		listers.setLayout(new BoxLayout(listers, BoxLayout.X_AXIS));
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		String[] agents_options = factory.getAvailableAgentsList().toArray(new String[0]);
 		agent_1 = new JComboBox<String>(agents_options);
 		agent_2 = new JComboBox<String>(agents_options);
+		label = new JLabel(" VS ");
+		label.setForeground(Color.WHITE);
+		Font font = label.getFont();
+		riskLabel = new JLabel("RISK");
+		riskLabel.setFont(new Font(font.getFontName(), font.getStyle(), 128));
+		riskLabel.setForeground(Color.black);
+		riskLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		Font font2 = new Font(font.getFontName(), font.getStyle(), 16);
+		Color transparent = new Color(0, 0, 0, 0);
+		this.setOpaque(false);
+		label.setFont(new Font(font.getFontName(), font.getStyle(), 32));
 		agent_1.setSelectedIndex(0);
 		agent_2.setSelectedIndex(0);
+		agent_1.setBackground(Color.WHITE);
+		agent_2.setBackground(Color.WHITE);
+		agent_1.setMaximumSize(new Dimension(150, 80));
+		agent_2.setMaximumSize(new Dimension(150, 80));
+		agent_1.setFont(font2);
+		agent_2.setFont(font2);
 		startGame = new JButton("Start Game");
-		this.add(Box.createHorizontalGlue(), this);
-		this.add(agent_1);
-		this.add(Box.createHorizontalGlue(), this);
-		this.add(agent_2);
-		this.add(Box.createHorizontalGlue(), this);
+		startGame.setFont(new Font(font.getFontName(), font.getStyle(), 24));
+		startGame.setMaximumSize(new Dimension(300, 300));
+		listers.add(Box.createHorizontalGlue());
+		listers.add(agent_1);
+		listers.add(Box.createHorizontalStrut(20));
+		listers.add(label);
+		listers.add(Box.createHorizontalStrut(20));
+		listers.add(agent_2);
+		listers.add(Box.createHorizontalGlue());
+		listers.setBackground(transparent);
+		this.add(Box.createVerticalStrut(40));
+		this.add(riskLabel);
+		this.add(Box.createVerticalGlue());
+		this.add(Box.createVerticalStrut(40));
+		this.add(listers);
+		this.add(Box.createVerticalStrut(50));
+		startGame.setAlignmentX(Component.CENTER_ALIGNMENT);
 		this.add(startGame);
-		this.add(Box.createHorizontalGlue(), this);
+		this.add(Box.createVerticalGlue());
 		startGame.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
