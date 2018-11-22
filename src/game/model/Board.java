@@ -285,4 +285,9 @@ public class Board implements GameBoard {
 		return this.edges;
 	}
 
+	@Override
+	public List<Set<Node>> getContinents() {
+		return this.continents;
+	}
+
 }

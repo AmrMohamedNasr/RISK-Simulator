@@ -40,4 +40,6 @@ public interface GameBoard {
 	public List<Pair<Integer, Integer>> getAttackingEdges();
 	
 	public List<Pair<Integer, Integer>> getEdges();
+	
+	public List<Set<Node>> getContinents();
 }
