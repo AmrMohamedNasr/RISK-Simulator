@@ -16,6 +16,7 @@ import game.model.info_capsules.Attack;
  *
  */
 public class Board implements GameBoard {
+	private Integer cost;
 	private Map<Integer, Node> player_1_set;
 	private Map<Integer, Node> player_2_set;
 	private List<Pair<Integer, Integer>> edges;
@@ -25,8 +26,8 @@ public class Board implements GameBoard {
 	private List<Set<Node>> continents;
 	private List<Integer> continents_bonus;
 
-	public Board(Set<Node> player_1, Set<Node> player_2, List<Pair<Integer, Integer>> edges,
-			List<Set<Node>> continents, List<Integer> continentBonus) {
+	public Board(Set<Node> player_1, Set<Node> player_2, List<Pair<Integer, Integer>> edges, List<Set<Node>> continents,
+			List<Integer> continentBonus) {
 		this.player_1_set = new HashMap<Integer, Node>();
 		this.player_2_set = new HashMap<Integer, Node>();
 		for (Node n : player_1) {
@@ -52,7 +53,7 @@ public class Board implements GameBoard {
 			List<Set<Node>> continents, List<Integer> continentBonus) {
 		this.player_1_set = player_1;
 		this.player_2_set = player_2;
-		
+
 		this.edges = edges;
 		this.attackingEdges = new ArrayList<Pair<Integer, Integer>>();
 		for (int i = 0; i < edges.size(); i++) {
@@ -65,7 +66,7 @@ public class Board implements GameBoard {
 		last_turn_attack_1 = false;
 		last_turn_attack_2 = false;
 	}
-	
+
 	@Override
 	public List<GameBoard> generateBoardPlacementChildren(Player player) {
 		// TODO Auto-generated method stub
@@ -84,10 +85,10 @@ public class Board implements GameBoard {
 		Map<Integer, Node> tempPly2Set = copyMap(this.player_2_set);
 		return new Board(tempPly1Set, tempPly2Set, edges, continents, continents_bonus);
 	}
-	
+
 	private Map<Integer, Node> copyMap(Map<Integer, Node> nodes) {
 		Map<Integer, Node> tempNodes = new HashMap<Integer, Node>();
-		for(Node node: nodes.values()) {
+		for (Node node : nodes.values()) {
 			Node temp = new Node(node.getId(), node.getArmies());
 			temp.setEdges(node.getEdges());
 			tempNodes.put(temp.getId(), temp);
@@ -118,7 +119,7 @@ public class Board implements GameBoard {
 			return new ArrayList<Node>(player_2_set.values());
 		}
 	}
-	
+
 	public Map<Integer, Node> getPlayerNodesMap(Player player) {
 		if (player == null) {
 			throw new RuntimeException("Must assign a player");
@@ -216,9 +217,11 @@ public class Board implements GameBoard {
 		int dest = attack.dest;
 		int units_to_move = attack.units_to_move;
 		if (player == Player.PLAYER_1) {
-			this.last_turn_attack_1 = willAttack && units_to_move > 0 && player_1_set.containsKey(src) != player_1_set.containsKey(dest);
+			this.last_turn_attack_1 = willAttack && units_to_move > 0
+					&& player_1_set.containsKey(src) != player_1_set.containsKey(dest);
 		} else {
-			this.last_turn_attack_2 = willAttack && units_to_move > 0 && player_1_set.containsKey(src) != player_1_set.containsKey(dest);
+			this.last_turn_attack_2 = willAttack && units_to_move > 0
+					&& player_1_set.containsKey(src) != player_1_set.containsKey(dest);
 		}
 		if (!willAttack || units_to_move < 1) {
 			return;
@@ -228,7 +231,8 @@ public class Board implements GameBoard {
 				|| (node_belongs_to(Player.PLAYER_2, src) && node_belongs_to(Player.PLAYER_2, dest))) {
 			return;
 		}
-		Map<Integer, Node> attacker_set = getPlayerNodesMap(player), attacked_set = getPlayerNodesMap(player.reverseTurn());
+		Map<Integer, Node> attacker_set = getPlayerNodesMap(player),
+				attacked_set = getPlayerNodesMap(player.reverseTurn());
 		Node source = getNodeById(player, src);
 		Node destination = getNodeById(player.reverseTurn(), dest);
 		if (source == null || destination == null) {
@@ -248,10 +252,9 @@ public class Board implements GameBoard {
 			}
 		}
 		for (int i = 0; i < destination.getEdges().size(); i++) {
-			if (player_1_set.containsKey(destination.getId()) 
-					!= player_1_set.containsKey(destination.getEdges().get(i))) {
-				this.attackingEdges.add(new Pair<Integer, Integer>(destination.getId(),
-						destination.getEdges().get(i)));
+			if (player_1_set.containsKey(destination.getId()) != player_1_set
+					.containsKey(destination.getEdges().get(i))) {
+				this.attackingEdges.add(new Pair<Integer, Integer>(destination.getId(), destination.getEdges().get(i)));
 			}
 		}
 	}
@@ -288,6 +291,21 @@ public class Board implements GameBoard {
 	@Override
 	public List<Set<Node>> getContinents() {
 		return this.continents;
+	}
+
+	@Override
+	public int compareTo(GameBoard o) {
+		return cost.compareTo(o.getCost());
+	}
+
+	@Override
+	public void setCost(int cost) {
+		this.cost = cost;
+	}
+
+	@Override
+	public int getCost() {
+		return cost;
 	}
 
 }

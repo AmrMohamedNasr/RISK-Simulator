@@ -1,11 +1,8 @@
 package agent.search.non_ai;
 
-import java.awt.Dialog;
-
 import javax.swing.JFrame;
 
 import agent.Agent;
-import agent.search.SearchAgent;
 import game.model.GameBoard;
 import game.model.Node;
 import game.model.Player;
@@ -13,12 +10,10 @@ import game.model.info_capsules.Attack;
 
 /**
  * 
- * @author Michael
- * Agent that reads the next move from the user.
+ * @author Michael Agent that reads the next move from the user.
  */
 public class HumanAgent implements Agent {
 
-	
 	/**
 	 * player uses this agent.
 	 */
@@ -28,19 +23,19 @@ public class HumanAgent implements Agent {
 	 */
 	private Node placeNode;
 	/**
-	 * Attack action. 
+	 * Attack action.
 	 */
 	private Attack attack;
 	/**
 	 * JFrame.
 	 */
 	private JFrame parent;
-	
+
 	public HumanAgent(Player player, JFrame parent) {
 		this.player = player;
 		this.parent = parent;
 	}
-	
+
 	@Override
 	public String getAgentName() {
 		return "HumanAgent";
@@ -67,7 +62,5 @@ public class HumanAgent implements Agent {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	
 
 }

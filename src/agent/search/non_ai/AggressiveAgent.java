@@ -9,12 +9,13 @@ import game.model.Node;
 import game.model.Pair;
 import game.model.Player;
 import game.model.info_capsules.Attack;
+
 /**
  * 
- * @author Michael
- * Agent that always places all its bonus armies on the vertex with the most
- * armies, and greedily attempts to attack so as to cause the most damage
- * i.e: to prevent its opponent getting a continent bonus (the largest possible).
+ * @author Michael Agent that always places all its bonus armies on the vertex
+ *         with the most armies, and greedily attempts to attack so as to cause
+ *         the most damage i.e: to prevent its opponent getting a continent
+ *         bonus (the largest possible).
  */
 public class AggressiveAgent implements Agent {
 
@@ -27,14 +28,14 @@ public class AggressiveAgent implements Agent {
 	 */
 	private Node placeNode;
 	/**
-	 * Attack action. 
+	 * Attack action.
 	 */
 	private Attack attack;
-	
+
 	public AggressiveAgent(Player player) {
 		this.player = player;
 	}
-	
+
 	@Override
 	public String getAgentName() {
 		return "AggressiveAgent";
@@ -52,9 +53,9 @@ public class AggressiveAgent implements Agent {
 		int maxDamage = 0;
 		Attack tempAttack = new Attack(false, 0, 0, 0);
 		Set<Node> nodes = board.getPlayerNodesSet(player);
-		for (Node node: nodes) {
-			if (node.getArmies() > maxArmies ||
-					(node.getArmies() == maxArmies && node.getId() < tempPlaceNode.getId())) {
+		for (Node node : nodes) {
+			if (node.getArmies() > maxArmies
+					|| (node.getArmies() == maxArmies && node.getId() < tempPlaceNode.getId())) {
 				maxArmies = node.getArmies();
 				tempPlaceNode = node;
 			}
@@ -72,16 +73,17 @@ public class AggressiveAgent implements Agent {
 			if (plNode == tempPlaceNode) {
 				plNode.setArmies(plNode.getArmies() + board.get_turn_unit_number(player));
 			}
-			if (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() > maxDamage || 
-					(plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() == maxDamage && tempAttack.src == plNode.getId() )) {
+			if (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() > maxDamage
+					|| (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() == maxDamage
+							&& tempAttack.src == plNode.getId())) {
 				maxDamage = opNode.getArmies();
 				// assume all possible armies will go to new node conquered.
-				tempAttack = new Attack(true, plNode.getId(), opNode.getId(), plNode.getArmies() - opNode.getArmies() - 1);
+				tempAttack = new Attack(true, plNode.getId(), opNode.getId(),
+						plNode.getArmies() - opNode.getArmies() - 1);
 			}
 		}
 		this.attack = tempAttack;
 		this.placeNode = tempPlaceNode;
-		
 	}
 
 	@Override
@@ -96,7 +98,5 @@ public class AggressiveAgent implements Agent {
 	public Attack attack_action() {
 		return this.attack;
 	}
-
-	
 
 }
