@@ -191,7 +191,7 @@ public class Board implements GameBoard {
 		attacks.add(new Attack(false, 0, 0, 0));
 		return attacks;
 	}
-	
+
 	@Override
 	public boolean node_belongs_to(Player player, int node) {
 		if (player == null) {
@@ -326,6 +326,24 @@ public class Board implements GameBoard {
 	@Override
 	public int compareTo(GameBoard o) {
 		return cost.compareTo(o.getCost());
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		for (Pair<Integer, Integer> pair : attackingEdges) {
+			boolean found = false;
+			for (Pair<Integer, Integer> pair2 : ((GameBoard) o).getAttackingEdges()) {
+				if (pair.first == pair2.first && pair.second == pair2.second
+						|| pair.first == pair2.second && pair.second == pair2.first) {
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
