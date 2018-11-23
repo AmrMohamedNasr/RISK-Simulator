@@ -184,7 +184,7 @@ public class Board implements GameBoard {
 			}
 			Node srcN = attacker_set.get(src);
 			Node destN = attacked_set.get(dest);
-			if (2 < srcN.getArmies() - destN.getArmies()) {
+			if (2 <= srcN.getArmies() - destN.getArmies()) {
 				attacks.add(new Attack(true, src, dest, srcN.getArmies() - destN.getArmies() - 1));
 			}
 		}

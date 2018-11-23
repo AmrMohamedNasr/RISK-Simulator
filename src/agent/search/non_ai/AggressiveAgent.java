@@ -71,15 +71,30 @@ public class AggressiveAgent implements Agent {
 				opNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(i).first);
 			}
 			if (plNode == tempPlaceNode) {
-				plNode.setArmies(plNode.getArmies() + board.get_turn_unit_number(player));
+				if (plNode.getArmies() + board.get_turn_unit_number(player) - opNode.getArmies() > 1 && opNode.getArmies() > maxDamage
+						|| (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() == maxDamage
+								&& tempAttack.src == plNode.getId())) {
+					maxDamage = opNode.getArmies();
+					// assume all possible armies will go to new node conquered.
+					tempAttack = new Attack(true, plNode.getId(), opNode.getId(),
+							plNode.getArmies() - opNode.getArmies() - 1);
+				}
+			} else {
+				if (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() > maxDamage
+						|| (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() == maxDamage
+								&& tempAttack.src == plNode.getId())) {
+					maxDamage = opNode.getArmies();
+					// assume all possible armies will go to new node conquered.
+					tempAttack = new Attack(true, plNode.getId(), opNode.getId(),
+							plNode.getArmies() - opNode.getArmies() - 1);
+				}
 			}
-			if (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() > maxDamage
-					|| (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() == maxDamage
-							&& tempAttack.src == plNode.getId())) {
-				maxDamage = opNode.getArmies();
-				// assume all possible armies will go to new node conquered.
-				tempAttack = new Attack(true, plNode.getId(), opNode.getId(),
-						plNode.getArmies() - opNode.getArmies() - 1);
+		}
+		Set<Node> oppNodes = board.getPlayerNodesSet(player.reverseTurn());
+		List<Set<Node>> continents = board.getContinents();
+		for (int i = 0; i < continents.size(); i++) {
+			if (oppNodes.contains(continents.get(i))) {
+				
 			}
 		}
 		this.attack = tempAttack;

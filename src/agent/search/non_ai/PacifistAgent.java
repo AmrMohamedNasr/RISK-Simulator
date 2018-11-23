@@ -72,13 +72,20 @@ public class PacifistAgent implements Agent {
 				opNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(i).first);
 			}
 			if (temp == plNode) {
-				plNode.setArmies(plNode.getArmies() + board.get_turn_unit_number(player));
-			}
-			if (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() < minDamage || 
-					(plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() == minDamage && minAttack.src == plNode.getId() )) {
-				minDamage = opNode.getArmies();
-				// assume all possible armies will go to new node conquered. 
-				minAttack = new Attack(true, plNode.getId(), opNode.getId(), plNode.getArmies() - opNode.getArmies() - 1);
+			
+				if (plNode.getArmies() + board.get_turn_unit_number(player) - opNode.getArmies() > 1 && opNode.getArmies() < minDamage || 
+						(plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() == minDamage && minAttack.src == plNode.getId() )) {
+					minDamage = opNode.getArmies();
+					// assume all possible armies will go to new node conquered. 
+					minAttack = new Attack(true, plNode.getId(), opNode.getId(), plNode.getArmies() - opNode.getArmies() - 1);
+				}
+			} else {
+				if (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() < minDamage || 
+						(plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() == minDamage && minAttack.src == plNode.getId() )) {
+					minDamage = opNode.getArmies();
+					// assume all possible armies will go to new node conquered. 
+					minAttack = new Attack(true, plNode.getId(), opNode.getId(), plNode.getArmies() - opNode.getArmies() - 1);
+				}
 			}
 		}
 		this.attack = minAttack;
