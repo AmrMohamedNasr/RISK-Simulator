@@ -1,5 +1,6 @@
 package agent.heuristic;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -7,6 +8,7 @@ import game.model.GameBoard;
 import game.model.Node;
 import game.model.Pair;
 import game.model.Player;
+import game.model.info_capsules.Attack;
 
 public class RiskGameHeuristic implements GameHeuristic {
 
@@ -14,7 +16,7 @@ public class RiskGameHeuristic implements GameHeuristic {
 	public int calculateHeuristicScore(Player player, GameBoard board) {
 		List<Pair<Integer, Integer>> attackingEdges = board.getAttackingEdges();
 		Set<Node> oppNodes = board.getPlayerNodesSet(player.reverseTurn());
-		List<Set<Node>> continents = board.getContinents();
+		Set<Node> visitedOppNodes = new HashSet<>();
 		int totalCost = 0;
 		for (int i= 0; i < attackingEdges.size(); i++) {
 			Node oppNode, plNode;
@@ -25,18 +27,17 @@ public class RiskGameHeuristic implements GameHeuristic {
 				plNode = board.getNodeById(player, attackingEdges.get(i).first);
 				oppNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(i).second);
 			}
-			totalCost += (oppNode.getArmies() - plNode.getArmies());
-		}
-		totalCost += oppNodes.size();
-		for (int i = 0; i < continents.size(); i++) {
-			boolean completeCont = true;
-			for (Node node:continents.get(i) ) {
-				if (!oppNodes.contains(node)) {
-					completeCont = false;
-				}
+			if (plNode.getArmies() - oppNode.getArmies() > 1 && !visitedOppNodes.contains(oppNode)) {
+				visitedOppNodes.add(oppNode);
+				totalCost += 1;
+			} else if (plNode.getArmies() - oppNode.getArmies() <= 1 && !visitedOppNodes.contains(oppNode)) {
+				visitedOppNodes.add(oppNode);
+				totalCost += 2;
 			}
-			if (completeCont) {
-				totalCost += continents.get(i).size();
+		}
+		for (Node node: oppNodes) {
+			if (!visitedOppNodes.contains(node)) {
+				totalCost += 1;
 			}
 		}
 		return totalCost;
