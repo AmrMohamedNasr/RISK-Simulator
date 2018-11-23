@@ -74,7 +74,7 @@ public class PacifistAgent implements Agent {
 			if (temp == plNode) {
 			
 				if (plNode.getArmies() + board.get_turn_unit_number(player) - opNode.getArmies() > 1 && opNode.getArmies() < minDamage || 
-						(plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() == minDamage && minAttack.src == plNode.getId() )) {
+						(plNode.getArmies() + board.get_turn_unit_number(player) - opNode.getArmies() > 1 && opNode.getArmies() == minDamage && minAttack.src == plNode.getId() )) {
 					minDamage = opNode.getArmies();
 					// assume all possible armies will go to new node conquered. 
 					minAttack = new Attack(true, plNode.getId(), opNode.getId(), plNode.getArmies() + board.get_turn_unit_number(player) - opNode.getArmies() - 1);

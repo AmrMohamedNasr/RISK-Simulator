@@ -71,7 +71,13 @@ public class AggressiveAgent implements Agent {
 		Set<Node> oppNodes = board.getPlayerNodesSet(player.reverseTurn());
 		List<Set<Node>> continents = board.getContinents();
 		for (int i = 0; i < continents.size(); i++) {
-			if (oppNodes.contains(continents.get(i))) {
+			boolean completeCont = true;
+			for (Node node:continents.get(i) ) {
+				if (!oppNodes.contains(node)) {
+					completeCont = false;
+				}
+			}
+			if (completeCont) {
 				for (int j = 0; j < attackingEdges.size(); j++) {
 					Node plNode, opNode;
 					if (continents.get(i).contains(attackingEdges.get(j).first)) {
@@ -107,7 +113,7 @@ public class AggressiveAgent implements Agent {
 	private void setMaxAttack(Node plNode, Node opNode, GameBoard board) {
 		if (plNode == tempPlaceNode) {
 			if (plNode.getArmies() + board.get_turn_unit_number(player) - opNode.getArmies() > 1 && opNode.getArmies() > maxDamage
-					|| (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() == maxDamage
+					|| (plNode.getArmies() + board.get_turn_unit_number(player) - opNode.getArmies() > 1 && opNode.getArmies() == maxDamage
 							&& tempAttack.src == plNode.getId())) {
 				maxDamage = opNode.getArmies();
 				// assume all possible armies will go to new node conquered.

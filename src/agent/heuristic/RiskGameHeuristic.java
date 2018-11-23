@@ -29,7 +29,13 @@ public class RiskGameHeuristic implements GameHeuristic {
 		}
 		totalCost += oppNodes.size();
 		for (int i = 0; i < continents.size(); i++) {
-			if (oppNodes.contains(continents.get(i))) {
+			boolean completeCont = true;
+			for (Node node:continents.get(i) ) {
+				if (!oppNodes.contains(node)) {
+					completeCont = false;
+				}
+			}
+			if (completeCont) {
 				totalCost += continents.get(i).size();
 			}
 		}
