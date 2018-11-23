@@ -32,6 +32,13 @@ public class AggressiveAgent implements Agent {
 	 */
 	private Attack attack;
 
+	/**
+	 * temporary Variables for Placement and Attack.
+	 */
+	private int maxDamage;
+	private int maxArmies;
+	private Node tempPlaceNode;
+	private Attack tempAttack;
 	public AggressiveAgent(Player player) {
 		this.player = player;
 	}
@@ -48,10 +55,10 @@ public class AggressiveAgent implements Agent {
 
 	@Override
 	public void observe_enviroment(GameBoard board) {
-		int maxArmies = 0;
-		Node tempPlaceNode = null;
-		int maxDamage = 0;
-		Attack tempAttack = new Attack(false, 0, 0, 0);
+		maxDamage = 0;
+		maxArmies = 0;
+		tempPlaceNode = null;
+		tempAttack = new Attack(false, 0, 0, 0);
 		Set<Node> nodes = board.getPlayerNodesSet(player);
 		for (Node node : nodes) {
 			if (node.getArmies() > maxArmies
@@ -61,44 +68,62 @@ public class AggressiveAgent implements Agent {
 			}
 		}
 		List<Pair<Integer, Integer>> attackingEdges = board.getAttackingEdges();
-		for (int i = 0; i < attackingEdges.size(); i++) {
-			Node plNode, opNode;
-			if (board.node_belongs_to(player, attackingEdges.get(i).first)) {
-				plNode = board.getNodeById(player, attackingEdges.get(i).first);
-				opNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(i).second);
-			} else {
-				plNode = board.getNodeById(player, attackingEdges.get(i).second);
-				opNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(i).first);
-			}
-			if (plNode == tempPlaceNode) {
-				if (plNode.getArmies() + board.get_turn_unit_number(player) - opNode.getArmies() > 1 && opNode.getArmies() > maxDamage
-						|| (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() == maxDamage
-								&& tempAttack.src == plNode.getId())) {
-					maxDamage = opNode.getArmies();
-					// assume all possible armies will go to new node conquered.
-					tempAttack = new Attack(true, plNode.getId(), opNode.getId(),
-							plNode.getArmies() - opNode.getArmies() - 1);
-				}
-			} else {
-				if (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() > maxDamage
-						|| (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() == maxDamage
-								&& tempAttack.src == plNode.getId())) {
-					maxDamage = opNode.getArmies();
-					// assume all possible armies will go to new node conquered.
-					tempAttack = new Attack(true, plNode.getId(), opNode.getId(),
-							plNode.getArmies() - opNode.getArmies() - 1);
-				}
-			}
-		}
 		Set<Node> oppNodes = board.getPlayerNodesSet(player.reverseTurn());
 		List<Set<Node>> continents = board.getContinents();
 		for (int i = 0; i < continents.size(); i++) {
 			if (oppNodes.contains(continents.get(i))) {
-				
+				for (int j = 0; j < attackingEdges.size(); j++) {
+					Node plNode, opNode;
+					if (continents.get(i).contains(attackingEdges.get(j).first)) {
+						plNode = board.getNodeById(player, attackingEdges.get(j).second);
+						opNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(j).first);
+						setMaxAttack(plNode, opNode, board);
+					}
+					if (continents.get(i).contains(attackingEdges.get(j).second)) {
+						plNode = board.getNodeById(player, attackingEdges.get(j).first);
+						opNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(j).second);
+						setMaxAttack(plNode, opNode, board);
+					}	
+				}
+			}
+		}
+		if (maxDamage == 0) {
+			for (int i = 0; i < attackingEdges.size(); i++) {
+				Node plNode, opNode;
+				if (board.node_belongs_to(player, attackingEdges.get(i).first)) {
+					plNode = board.getNodeById(player, attackingEdges.get(i).first);
+					opNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(i).second);
+				} else {
+					plNode = board.getNodeById(player, attackingEdges.get(i).second);
+					opNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(i).first);
+				}
+				setMaxAttack(plNode, opNode, board);
 			}
 		}
 		this.attack = tempAttack;
 		this.placeNode = tempPlaceNode;
+	}
+		
+	private void setMaxAttack(Node plNode, Node opNode, GameBoard board) {
+		if (plNode == tempPlaceNode) {
+			if (plNode.getArmies() + board.get_turn_unit_number(player) - opNode.getArmies() > 1 && opNode.getArmies() > maxDamage
+					|| (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() == maxDamage
+							&& tempAttack.src == plNode.getId())) {
+				maxDamage = opNode.getArmies();
+				// assume all possible armies will go to new node conquered.
+				tempAttack = new Attack(true, plNode.getId(), opNode.getId(),
+						plNode.getArmies() + board.get_turn_unit_number(player) - opNode.getArmies() - 1);
+			}
+		} else {
+			if (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() > maxDamage
+					|| (plNode.getArmies() - opNode.getArmies() > 1 && opNode.getArmies() == maxDamage
+							&& tempAttack.src == plNode.getId())) {
+				maxDamage = opNode.getArmies();
+				// assume all possible armies will go to new node conquered.
+				tempAttack = new Attack(true, plNode.getId(), opNode.getId(),
+						plNode.getArmies() - opNode.getArmies() - 1);
+			}
+		}
 	}
 
 	@Override
