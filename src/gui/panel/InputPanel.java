@@ -27,6 +27,7 @@ import game.model.GameBoard;
 import game.model.Node;
 import game.model.Player;
 import game.model.info_capsules.Attack;
+import game.model.info_capsules.AttackComparator;
 
 public class InputPanel extends JPanel {
 
@@ -147,6 +148,7 @@ public class InputPanel extends JPanel {
 	
 	public void attack_turn(GameBoard board, Player player) {
 		List<Attack> attacks = board.getPlayerUniqueAttacks(player);
+		Collections.sort(attacks, new AttackComparator());
 		List<String> possible_attacks = new ArrayList<String>();
 		maxValues.clear();
 		maxValues.add(0);

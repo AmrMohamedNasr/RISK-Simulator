@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -25,7 +26,14 @@ public class GamePanel extends JPanel implements GameWindow {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
+	private static final String[] shapes = {
+			"circle", "diamond", "cross", "box", "rounded-box" 	
+		};
+	private static final String[] colors = {
+			"#F8AA17", "#34F50E", "#0ECEF5", "#AF0EF5","#4B640B", 
+			"#F50EB6", "#A47864", "#619089", "#F782C0", "#F5F10E"
+	};
 	/**
 	 * viewer.
 	 */
@@ -60,16 +68,18 @@ public class GamePanel extends JPanel implements GameWindow {
         graph.setStrict(false);
         graph.addAttribute("ui.stylesheet",
     			"node {"
+    			+ " size: 20px;"
+    			+ " stroke-width: 3;"
     			+ " text-mode: normal;"
     			+ " text-background-mode: plain;"
     			+ " text-alignment: above;"
-    			+ " text-size: 12;"
+    			+ " text-size: 14;"
     			+ " }"
     			+ "node.PLAYER_1 {"
     			+ " fill-color : red;"
     			+ " }"
     			+ "node.PLAYER_2 {"
-    			+ " fill-color : black;"
+    			+ " fill-color : blue;"
     			+ " }"
     			+ "edge {"
     			+ " text-mode: normal;"
@@ -100,9 +110,11 @@ public class GamePanel extends JPanel implements GameWindow {
         graph.addAttribute("ui.stylesheet",
     			"node {"
     			+ " text-mode: normal;"
+    			+ " size: 20px;"
     			+ " text-background-mode: plain;"
     			+ " text-alignment: above;"
-    			+ " text-size: 12;"
+    			+ " text-size: 14;"
+    			+ " stroke-width: 3;"
     			+ " }"
     			+ "node.PLAYER_1 {"
     			+ " fill-color : red;"
@@ -118,14 +130,33 @@ public class GamePanel extends JPanel implements GameWindow {
     			+ "}");
 	}
 
+	private Pair<String, String> getContinent(List<Set<Node>> continents, Node node) {
+		for (int i = 0; i < continents.size(); i++) {
+			if (continents.get(i).contains(node)) {
+				int shape_index = i % shapes.length;
+				int color_index = (i / shapes.length) % colors.length;	
+				return new Pair<String, String>(shapes[shape_index], colors[color_index]);
+			}
+		}
+		return new Pair<String, String>("circle", "#000000");
+	}
+	
 	@Override
 	public void draw_graph(GameBoard board) {
 		clear();
 		this.turnPanel.updateTurn("Player 1 : Place Your Units.", Player.PLAYER_1);
+		List<Set<Node>> p = board.getContinents();
+		
 		List<Node> player_nodes = board.getPlayerNodes(Player.PLAYER_1);
 		for (int i = 0; i < player_nodes.size(); i++) {
+			Pair<String,String> cnt_id = getContinent(p, player_nodes.get(i));
 			String str_id = String.valueOf(player_nodes.get(i).getId()); 
 			graph.addNode(str_id);
+			if (p.size() > shapes.length) {
+				graph.getNode(str_id).addAttribute("ui.style", "stroke-mode: plain;");
+			}
+			graph.getNode(str_id).addAttribute("ui.style", "shape : " + cnt_id.first +";");
+			graph.getNode(str_id).addAttribute("ui.style", "stroke-color : " + cnt_id.second +";");
 			graph.getNode(str_id).addAttribute("ui.label", "Id : " + str_id + " | Units : "
 					+ String.valueOf(player_nodes.get(i).getArmies()));
 			graph.getNode(str_id).addAttribute("ui.class", "PLAYER_1");
@@ -134,8 +165,14 @@ public class GamePanel extends JPanel implements GameWindow {
 		}
 		player_nodes = board.getPlayerNodes(Player.PLAYER_2);
 		for (int i = 0; i < player_nodes.size(); i++) {
+			Pair<String, String> cnt_id = getContinent(p, player_nodes.get(i));
 			String str_id = String.valueOf(player_nodes.get(i).getId()); 
 			graph.addNode(str_id);
+			if (p.size() > shapes.length) {
+				graph.getNode(str_id).addAttribute("ui.style", "stroke-mode: plain;");
+			}
+			graph.getNode(str_id).addAttribute("ui.style", "shape : " + cnt_id.first +";");
+			graph.getNode(str_id).addAttribute("ui.style", "stroke-color : " + cnt_id.second +";");
 			graph.getNode(str_id).addAttribute("ui.label", "Id : " + str_id + " | Units : "
 					+ String.valueOf(player_nodes.get(i).getArmies()));
 			graph.getNode(str_id).addAttribute("ui.class", "PLAYER_2");
