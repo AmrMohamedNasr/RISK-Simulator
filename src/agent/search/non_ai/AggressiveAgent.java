@@ -80,14 +80,14 @@ public class AggressiveAgent implements Agent {
 			if (completeCont) {
 				for (int j = 0; j < attackingEdges.size(); j++) {
 					Node plNode, opNode;
-					if (continents.get(i).contains(attackingEdges.get(j).first)) {
-						plNode = board.getNodeById(player, attackingEdges.get(j).second);
-						opNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(j).first);
-						setMaxAttack(plNode, opNode, board);
+					if (board.node_belongs_to(player, attackingEdges.get(i).first)) {
+						plNode = board.getNodeById(player, attackingEdges.get(i).first);
+						opNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(i).second);
+					} else {
+						plNode = board.getNodeById(player, attackingEdges.get(i).second);
+						opNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(i).first);
 					}
-					if (continents.get(i).contains(attackingEdges.get(j).second)) {
-						plNode = board.getNodeById(player, attackingEdges.get(j).first);
-						opNode = board.getNodeById(player.reverseTurn(), attackingEdges.get(j).second);
+					if (continents.get(i).contains(opNode)) {
 						setMaxAttack(plNode, opNode, board);
 					}	
 				}
