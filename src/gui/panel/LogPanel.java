@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -31,7 +30,6 @@ public class LogPanel extends JPanel {
 		area.setMinimumSize(d);
 		pane = new JScrollPane(area);
 		pane.setSize(d);
-		pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		area.setEditable(false);
 		docStyle = area.addStyle("Log Style", null);
 		this.setLayout(new BorderLayout());

@@ -8,12 +8,12 @@ import game.model.GameBoard;
 import game.model.Node;
 import game.model.Pair;
 import game.model.Player;
-import game.model.info_capsules.Attack;
 
 public class RiskGameHeuristic implements GameHeuristic {
 
 	@Override
 	public int calculateHeuristicScore(Player player, GameBoard board) {
+
 		List<Pair<Integer, Integer>> attackingEdges = board.getAttackingEdges();
 		Set<Node> oppNodes = board.getPlayerNodesSet(player.reverseTurn());
 		Set<Node> visitedOppNodes = new HashSet<>();
@@ -41,6 +41,8 @@ public class RiskGameHeuristic implements GameHeuristic {
 			}
 		}
 		return totalCost;
+		
+		//return board.getPlayerNodesMap(player.reverseTurn()).size();
 	}
 
 }

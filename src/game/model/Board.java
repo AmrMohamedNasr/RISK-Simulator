@@ -68,18 +68,6 @@ public class Board implements GameBoard {
 	}
 
 	@Override
-	public List<GameBoard> generateBoardPlacementChildren(Player player) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<GameBoard> generateBoardAttackChildren(Player player) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public GameBoard copyBoard() {
 		Map<Integer, Node> tempPly1Set = copyMap(this.player_1_set);
 		Map<Integer, Node> tempPly2Set = copyMap(this.player_2_set);
@@ -327,7 +315,7 @@ public class Board implements GameBoard {
 	public int compareTo(GameBoard o) {
 		return cost.compareTo(o.getCost());
 	}
-
+/*
 	@Override
 	public boolean equals(Object o) {
 		for (Pair<Integer, Integer> pair : attackingEdges) {
@@ -345,7 +333,7 @@ public class Board implements GameBoard {
 		}
 		return true;
 	}
-
+*/
 	@Override
 	public void setCost(int cost) {
 		this.cost = cost;
@@ -355,5 +343,32 @@ public class Board implements GameBoard {
 	public int getCost() {
 		return cost;
 	}
-
+	
+	public String getBoardStringRep() {
+		List<Attack> attacks = this.getPlayerUniqueAttacks(Player.PLAYER_1);
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < attacks.size(); i++) {
+			Attack at = attacks.get(i);
+			if (at.willAttack) {
+				builder.append(at.src);
+				//builder.append(at.units_to_move);
+				builder.append(at.dest);
+			}
+		}
+		return builder.toString();
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.getBoardStringRep().hashCode();	
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Board) {
+			return this.getBoardStringRep().equals(((Board) obj).getBoardStringRep());
+		} else {
+			return false;
+		}
+	}
 }

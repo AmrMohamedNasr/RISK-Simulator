@@ -13,9 +13,6 @@ import game.model.info_capsules.Attack;
  *
  */
 public interface GameBoard extends Comparable<GameBoard> {
-	public List<GameBoard> generateBoardPlacementChildren(Player player);
-
-	public List<GameBoard> generateBoardAttackChildren(Player player);
 
 	public GameBoard copyBoard();
 
