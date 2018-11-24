@@ -84,10 +84,10 @@ public class RiskState implements State {
 					atkBoard.place_unit(player.reverseTurn(), agent.place_action());
 				}
 				if (attacks.get(j).willAttack) {
-					this.children.add(new RiskState(atkBoard, player, this.actualCost,
+					this.children.add(new RiskState(atkBoard, player, this.actualCost + 1,
 							playerNodes.get(i).getId(), attacks.get(j), this, this.greedy));
 				} else {
-					this.children.add(new RiskState(atkBoard, player, this.actualCost + 1,
+					this.children.add(new RiskState(atkBoard, player, this.actualCost + 2,
 							playerNodes.get(i).getId(), attacks.get(j), this, this.greedy));
 				}
 			}

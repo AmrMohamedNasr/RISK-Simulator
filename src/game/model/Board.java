@@ -347,6 +347,16 @@ public class Board implements GameBoard {
 	public String getBoardStringRep() {
 		List<Attack> attacks = this.getPlayerUniqueAttacks(Player.PLAYER_1);
 		StringBuilder builder = new StringBuilder();
+		for (int i : player_1_set.keySet()) {
+			builder.append(i);
+			builder.append(",");
+		}
+		builder.append("|");
+		for (int i : player_2_set.keySet()) {
+			builder.append(i);
+			builder.append(",");
+		}
+		builder.append("|");
 		for (int i = 0; i < attacks.size(); i++) {
 			Attack at = attacks.get(i);
 			if (at.willAttack) {
