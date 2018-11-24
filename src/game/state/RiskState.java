@@ -20,6 +20,7 @@ public class RiskState implements State {
 	private int last_place;
 	private Attack attack;
 	private boolean greedy;
+	private int depth;
 	
 	public RiskState(GameBoard board, Player player, int actualCost, int lp, Attack attack, State state, boolean gred) {
 		this.board = board;
@@ -29,6 +30,18 @@ public class RiskState implements State {
 		this.attack = attack;
 		this.parent = state;
 		this.greedy = gred;
+		this.depth = 0;
+	}
+	
+	public RiskState(GameBoard board, Player player, int actualCost, int lp, Attack attack, State state, boolean gred, int depth) {
+		this.board = board;
+		this.player = player;
+		this.actualCost = actualCost;
+		this.last_place = lp;
+		this.attack = attack;
+		this.parent = state;
+		this.greedy = gred;
+		this.depth = depth;
 	}
 
 
@@ -85,10 +98,10 @@ public class RiskState implements State {
 				}
 				if (attacks.get(j).willAttack) {
 					this.children.add(new RiskState(atkBoard, player, this.actualCost + 1,
-							playerNodes.get(i).getId(), attacks.get(j), this, this.greedy));
+							playerNodes.get(i).getId(), attacks.get(j), this, this.greedy, this.depth + 1));
 				} else {
 					this.children.add(new RiskState(atkBoard, player, this.actualCost + 2,
-							playerNodes.get(i).getId(), attacks.get(j), this, this.greedy));
+							playerNodes.get(i).getId(), attacks.get(j), this, this.greedy, this.depth + 1));
 				}
 			}
 		}
@@ -137,5 +150,11 @@ public class RiskState implements State {
 		} else {
 			return false;
 		}
+	}
+
+
+	@Override
+	public int getDepth() {
+		return this.depth;
 	}
 }

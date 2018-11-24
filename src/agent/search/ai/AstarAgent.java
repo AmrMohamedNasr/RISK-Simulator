@@ -53,6 +53,13 @@ public class AstarAgent implements SearchAgent {
 				states, player);
 			this.exp_nodes += states.size();
 			this.solIndex = 0;
+		} else if (!this.solPath.get(this.solIndex).getBoard().equals(board)) {
+			List<State> states = new ArrayList<State>();
+			this.solPath = this.astar.search(new RiskState(
+					board, player, 0, 0, null, null, false),
+				states, player);
+			this.exp_nodes += states.size();
+			this.solIndex = 0;
 		}
 		this.solIndex++;
 	}
