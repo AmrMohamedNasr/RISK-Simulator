@@ -59,7 +59,7 @@ public class RTAStar {
 			} else if (current != root && !solSet.contains(current)) {
 				target = current;
 			}
-			if (current.getActualCost() <= limit) {
+			if (current.getDepth() <= limit) {
 				current.generateChildrenStates();
 				for (int i = 0; i < current.getChildrenStates().size(); i++) {
 					State child = current.getChildrenStates().get(i);

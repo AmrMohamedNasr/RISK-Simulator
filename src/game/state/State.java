@@ -62,6 +62,7 @@ public interface State extends Comparable<State>{
 	 * A list of states.
 	 */
 	List<State> getChildrenStates();
+	int getDepth();
 	/**
 	 * Checks if an object is equal to this state.
 	 * @param obj

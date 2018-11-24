@@ -52,6 +52,13 @@ public class GreedyAgent implements SearchAgent {
 				states, player);
 			this.exp_nodes += states.size();
 			this.solIndex = 0;
+		} else if (!this.solutionPath.get(this.solIndex).getBoard().equals(board)) {
+			List<State> states = new ArrayList<State>();
+			this.solutionPath = this.greedySearch.search(new RiskState(
+					board, player, 0, 0, null, null, true),
+				states, player);
+			this.exp_nodes += states.size();
+			this.solIndex = 0;
 		}
 		this.solIndex++;
 	}
