@@ -66,7 +66,7 @@ public class GreedySearch {
 					frontier_map.put(child, child.getHeuristicCost());
 				} else if (frontier_map.containsKey(child)) {
 					child.setHeuristicCost(heuristic.calculateHeuristicScore(player, ((RiskState)child).getBoard()));
-					if (child.getCost() < frontier_map.get(child)) {
+					if (child.getHeuristicCost() < frontier_map.get(child)) {
 						frontier_map.remove(child);
 						frontier.remove(child);
 						frontier.add(child);
